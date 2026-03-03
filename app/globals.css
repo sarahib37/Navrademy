@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 15% 97%;
+    --foreground: 213 55% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 213 55% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 55% 12%;
+
+    --primary: 10 85% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 218 18% 94%;
+    --secondary-foreground: 213 55% 12%;
+
+    --muted: 218 16% 93%;
+    --muted-foreground: 215 14% 50%;
+
+    --accent: 14 88% 62%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 218 14% 90%;
+    --input: 218 14% 88%;
+    --ring: 10 85% 60%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 213 55% 12%;
+    --sidebar-primary: 10 85% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 218 18% 94%;
+    --sidebar-accent-foreground: 213 55% 12%;
+    --sidebar-border: 218 14% 88%;
+    --sidebar-ring: 10 85% 60%;
+
+    /* Brand tokens */
+    --navy: 210 55% 12%;
+    --navy-deep: 210 58% 9%;
+    --navy-mid: 210 45% 18%;
+    --surface: 220 15% 97%;
+    --surface-hover: 218 16% 93%;
+
+    /* Coral-orange gradient stops */
+    --coral: 8 82% 56%;
+    --coral-mid: 10 85% 60%;
+    --coral-soft: 14 88% 64%;
+    --coral-warm: 18 90% 68%;
+
+    /* Warm neutral for subtle backgrounds */
+    --warm-bg: 25 30% 96%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* ===== Gradient Text ===== */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(8, 82%, 54%), hsl(14, 88%, 62%), hsl(20, 90%, 68%));
+  }
+
+  .gradient-text-warm {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(10, 85%, 58%), hsl(22, 90%, 62%));
+  }
+
+  /* ===== Gradient Backgrounds ===== */
+  .gradient-bg {
+    background-image: linear-gradient(135deg, hsl(6, 84%, 54%), hsl(12, 87%, 60%), hsl(18, 90%, 66%));
+  }
+
+  .gradient-bg-rich {
+    background-image: linear-gradient(135deg, hsl(4, 86%, 50%), hsl(10, 85%, 58%), hsl(18, 90%, 66%));
+  }
+
+  .gradient-bg-soft {
+    background-image: linear-gradient(135deg, hsl(10, 85%, 60% / 0.05), hsl(25, 50%, 60% / 0.02));
+  }
+
+  .gradient-bg-warm {
+    background-image: linear-gradient(160deg, hsl(25, 30%, 96%), hsl(220, 15%, 97%));
+  }
+
+  .gradient-border {
+    border-image: linear-gradient(135deg, hsl(6, 84%, 54%), hsl(18, 90%, 66%)) 1;
+  }
+
+  /* ===== Glow Effects ===== */
+  .glow-coral {
+    box-shadow: 0 0 40px -10px hsl(10, 85%, 60% / 0.35), 0 0 80px -20px hsl(14, 88%, 62% / 0.15);
+  }
+
+  .glow-coral-sm {
+    box-shadow: 0 0 20px -5px hsl(10, 85%, 60% / 0.25);
+  }
+
+  /* ===== Cards ===== */
+  .glass-card {
+    @apply bg-card border border-border/50 shadow-sm;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-card:hover {
+    box-shadow: 0 8px 30px -8px hsl(213 55% 12% / 0.08), 0 2px 8px -2px hsl(213 55% 12% / 0.04);
+  }
+
+  .elevated-card {
+    @apply bg-card rounded-xl border border-border/40;
+    box-shadow: 0 1px 3px hsl(213 55% 12% / 0.04), 0 4px 16px -4px hsl(213 55% 12% / 0.06);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .elevated-card:hover {
+    border-color: hsl(10, 85%, 60% / 0.2);
+    box-shadow: 0 4px 12px hsl(213 55% 12% / 0.06), 0 16px 48px -8px hsl(10 85% 60% / 0.08);
+    transform: translateY(-3px);
+  }
+
+  /* Premium card with left accent */
+  .accent-card {
+    @apply bg-card rounded-xl border border-border/30 relative overflow-hidden;
+    box-shadow: 0 1px 3px hsl(213 55% 12% / 0.03), 0 6px 20px -6px hsl(213 55% 12% / 0.05);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .accent-card::before {
+    content: '';
+    @apply absolute top-0 left-0 w-[3px] h-full;
+    background: linear-gradient(180deg, hsl(8, 82%, 54%), hsl(18, 90%, 66%));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .accent-card:hover {
+    box-shadow: 0 4px 12px hsl(213 55% 12% / 0.06), 0 16px 48px -8px hsl(10 85% 60% / 0.08);
+    transform: translateY(-2px);
+  }
+
+  .accent-card:hover::before {
+    opacity: 1;
+  }
+
+  /* ===== Dark Sections ===== */
+  .dark-section {
+    background-color: hsl(210, 55%, 12%);
+    color: hsl(210, 40%, 98%);
+  }
+
+  .dark-section-deep {
+    background-color: hsl(210, 58%, 9%);
+    color: hsl(210, 40%, 98%);
+  }
+
+  .section-padding {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+
+  /* ===== Section Eyebrow ===== */
+  .section-eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-4 inline-flex items-center gap-2;
+  }
+
+  .section-eyebrow::before {
+    content: '';
+    @apply w-6 h-px bg-primary/60;
+  }
+
+  /* ===== Decorative ===== */
+  .accent-line {
+    @apply w-12 h-1 rounded-full gradient-bg;
+  }
+
+  .pattern-overlay {
+    background-image: radial-gradient(circle at 1px 1px, hsl(0 0% 100% / 0.03) 1px, transparent 0);
+    background-size: 40px 40px;
+  }
+
+  .pattern-dots {
+    background-image: radial-gradient(circle at 1px 1px, hsl(10 85% 60% / 0.06) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  /* ===== Nav Links ===== */
+  .nav-link-premium {
+    @apply relative px-3 py-2 text-sm font-medium transition-all duration-200;
+  }
+
+  .nav-link-premium::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 w-0 h-0.5 rounded-full transition-all duration-300;
+    background: linear-gradient(90deg, hsl(8, 82%, 54%), hsl(18, 90%, 66%));
+    transform: translateX(-50%);
+  }
+
+  .nav-link-premium:hover::after,
+  .nav-link-premium.active::after {
+    @apply w-5;
+  }
+
+  /* ===== Stat pill for dark backgrounds ===== */
+  .stat-pill {
+    @apply flex items-center gap-3 px-5 py-4 rounded-xl bg-white/[0.04] backdrop-blur-sm;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}

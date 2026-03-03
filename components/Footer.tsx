@@ -1,0 +1,81 @@
+import { Link } from "react-router-dom";
+
+const footerLinks = {
+  Courses: [
+    { label: "Live Courses", href: "/courses/live" },
+    { label: "Self-Paced", href: "/courses/self-paced" },
+    { label: "Upcoming Courses", href: "/waitlist" },
+  ],
+  Company: [
+    { label: "About Us", href: "/about" },
+    { label: "Success Stories", href: "/success-stories" },
+    { label: "Blog", href: "/blog" },
+    { label: "Events", href: "/events" },
+  ],
+  Support: [
+    { label: "Contact", href: "/contact" },
+    { label: "Community", href: "/community" },
+    { label: "Mentorship", href: "/mentorship" },
+  ],
+  Legal: [
+    { label: "Privacy Policy", href: "#" },
+    { label: "Terms of Service", href: "#" },
+    { label: "Refund Policy", href: "#" },
+  ],
+};
+
+const Footer = () => {
+  return (
+    <footer className="dark-section-deep relative overflow-hidden">
+      {/* Top gradient border */}
+      <div className="h-[3px] gradient-bg-rich" />
+
+      {/* Pattern overlay */}
+      <div className="absolute inset-0 pattern-overlay pointer-events-none opacity-40" />
+
+      <div className="container relative mx-auto px-4 lg:px-8 py-16 lg:py-20">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
+          <div className="col-span-2 md:col-span-1">
+            <Link to="/" className="block">
+              <img src="/logo.png" alt="Navrademy logo" className="h-[18px] w-auto object-contain brightness-105 mb-3" />
+            </Link>
+            <p className="mt-3 text-sm text-white/40 leading-relaxed max-w-[200px]">
+              Practical digital skills for the future of work.
+            </p>
+          </div>
+          {Object.entries(footerLinks).map(([category, links]) => (
+            <div key={category}>
+              <h4 className="font-heading font-bold text-xs uppercase tracking-[0.15em] mb-5 text-white/80">{category}</h4>
+              <ul className="space-y-3">
+                {links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.href}
+                      className="text-sm text-white/35 hover:text-primary transition-colors duration-200"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="mt-14 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-white/25">
+            © {new Date().getFullYear()} Navrademy. All rights reserved.
+          </p>
+          <div className="flex gap-6">
+            {["Twitter", "LinkedIn", "Instagram", "YouTube"].map((s) => (
+              <a key={s} href="#" className="text-xs text-white/25 hover:text-primary transition-colors duration-200">
+                {s}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
