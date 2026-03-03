@@ -1,7 +1,9 @@
+"use client"
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Rocket } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const CTASection = () => {
   return (
@@ -34,13 +36,18 @@ const CTASection = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button variant="hero" size="xl" className="rounded-full" asChild>
-                  <Link to="/courses">
+                  <Link href="/courses">
                     Start Learning Today
                     <ArrowRight className="h-5 w-5" />
                   </Link>
                 </Button>
-                <Button variant="heroOutline" size="xl" className="rounded-full border-white/15 text-white hover:border-white/30 hover:bg-white/[0.04]" asChild>
-                  <Link to="/contact">Talk to an Advisor</Link>
+                <Button
+                  variant="heroOutline"
+                  size="xl"
+                  className="rounded-full border-white/15 text-white hover:border-white/30 hover:bg-white/[0.04]"
+                  asChild
+                >
+                  <Link href="/contact">Talk to an Advisor</Link>
                 </Button>
               </div>
             </div>

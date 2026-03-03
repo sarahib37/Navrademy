@@ -1,3 +1,4 @@
+"use client"
 import { motion } from "framer-motion";
 import { GraduationCap, RefreshCw, Briefcase, ArrowRight } from "lucide-react";
 

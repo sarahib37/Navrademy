@@ -1,7 +1,8 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Play } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -39,9 +40,7 @@ const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.08] mb-7 text-white"
           >
-            Gain clarity.{" "}
-            <span className="gradient-text">Build real skills.</span>{" "}
-            <span className="text-white/85">Own your future.</span>
+            Gain clarity. <span className="gradient-text">Build real skills.</span> <span className="text-white/85">Own your future.</span>
           </motion.h1>
 
           <motion.p
@@ -62,10 +61,10 @@ const HeroSection = () => {
             className="flex flex-col sm:flex-row gap-4"
           >
             <Button variant="hero" size="xl" className="rounded-full" asChild>
-              <Link to="/courses">
+              <a href="/courses">
                 Explore Courses
                 <ArrowRight className="h-5 w-5" />
-              </Link>
+              </a>
             </Button>
             <Button
               variant="heroOutline"
@@ -73,10 +72,10 @@ const HeroSection = () => {
               className="rounded-full border-white/15 text-white hover:border-white/30 hover:bg-white/[0.04]"
               asChild
             >
-              <Link to="/about">
+              <a href="/about">
                 <Play className="h-4 w-4 mr-1" />
                 Learn More
-              </Link>
+              </a>
             </Button>
           </motion.div>
 

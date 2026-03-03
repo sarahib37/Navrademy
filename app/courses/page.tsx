@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
@@ -5,7 +7,7 @@ import CTASection from "@/components/CTASection";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Users, Signal, BookOpen } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const liveCourses = [
   { title: "Digital Marketing Mastery", duration: "8 Weeks", students: "320+", level: "Beginner", description: "Learn SEO, social media, paid ads, and analytics from practitioners running real campaigns." },
@@ -23,33 +25,89 @@ const upcoming = [
   { title: "Content Strategy", duration: "6 Weeks", students: "Waitlist", level: "Beginner", description: "Learn to plan, create, and distribute content that drives real business results." },
 ];
 
-const CourseCard = ({ course, variant }: { course: typeof liveCourses[0]; variant: "live" | "self-paced" | "upcoming" }) => {
-  const categoryLabel = variant === "live" ? "Live Course" : variant === "self-paced" ? "Self-Paced" : "Upcoming";
-  const categoryClass = variant === "live" ? "bg-primary/20 text-primary" : variant === "self-paced" ? "bg-accent/20 text-accent" : "bg-muted text-muted-foreground";
+const CourseCard = ({
+  course,
+  variant,
+}: {
+  course: typeof liveCourses[0];
+  variant: "live" | "self-paced" | "upcoming";
+}) => {
+  const categoryLabel =
+    variant === "live"
+      ? "Live Course"
+      : variant === "self-paced"
+      ? "Self-Paced"
+      : "Upcoming";
+
+  const categoryClass =
+    variant === "live"
+      ? "bg-primary/20 text-primary"
+      : variant === "self-paced"
+      ? "bg-accent/20 text-accent"
+      : "bg-muted text-muted-foreground";
+
+  const href =
+    variant === "upcoming"
+      ? "/waitlist"
+      : variant === "live"
+      ? "/courses/live"
+      : "/courses/self-paced";
+
+  const buttonText =
+    variant === "upcoming"
+      ? "Join Waitlist"
+      : variant === "live"
+      ? "Apply Now"
+      : "Enroll Now";
 
   return (
     <div className="accent-card p-6 flex flex-col">
-      <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryClass} mb-4 inline-block self-start`}>{categoryLabel}</span>
-      <h3 className="text-xl font-heading font-bold mb-2 group-hover:text-primary transition-colors">{course.title}</h3>
-      <p className="text-sm text-muted-foreground mb-5 leading-relaxed flex-1">{course.description}</p>
+      <span
+        className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryClass} mb-4 inline-block self-start`}
+      >
+        {categoryLabel}
+      </span>
+
+      <h3 className="text-xl font-heading font-bold mb-2 group-hover:text-primary transition-colors">
+        {course.title}
+      </h3>
+
+      <p className="text-sm text-muted-foreground mb-5 leading-relaxed flex-1">
+        {course.description}
+      </p>
+
       <div className="flex items-center gap-4 text-xs text-muted-foreground mb-6">
-        <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{course.duration}</span>
-        <span className="flex items-center gap-1"><Users className="h-3.5 w-3.5" />{course.students}</span>
-        <span className="flex items-center gap-1"><Signal className="h-3.5 w-3.5" />{course.level}</span>
+        <span className="flex items-center gap-1">
+          <Clock className="h-3.5 w-3.5" />
+          {course.duration}
+        </span>
+        <span className="flex items-center gap-1">
+          <Users className="h-3.5 w-3.5" />
+          {course.students}
+        </span>
+        <span className="flex items-center gap-1">
+          <Signal className="h-3.5 w-3.5" />
+          {course.level}
+        </span>
       </div>
-      <Button variant={variant === "upcoming" ? "heroOutline" : "hero"} size="default" className="w-full" asChild>
-        <Link to={variant === "upcoming" ? "/waitlist" : variant === "live" ? "/courses/live" : "/courses/self-paced"}>
-          {variant === "upcoming" ? "Join Waitlist" : variant === "live" ? "Apply Now" : "Enroll Now"}
-        </Link>
+
+      <Button
+        variant={variant === "upcoming" ? "heroOutline" : "hero"}
+        size="default"
+        className="w-full"
+        asChild
+      >
+        <Link href={href}>{buttonText}</Link>
       </Button>
     </div>
   );
 };
 
-const Courses = () => {
+export default function Courses() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+
       <PageHero
         icon={BookOpen}
         eyebrow="Career-focused programs"
@@ -69,7 +127,13 @@ const Courses = () => {
               <div className="section-eyebrow">{section.label}</div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {section.data.map((c, i) => (
-                  <motion.div key={c.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+                  <motion.div
+                    key={c.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08 }}
+                  >
                     <CourseCard course={c} variant={section.variant} />
                   </motion.div>
                 ))}
@@ -83,6 +147,4 @@ const Courses = () => {
       <Footer />
     </div>
   );
-};
-
-export default Courses;
+}

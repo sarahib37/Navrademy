@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client"
+
+import Link from "next/link";
 
 const footerLinks = {
   Courses: [
@@ -36,7 +38,7 @@ const Footer = () => {
       <div className="container relative mx-auto px-4 lg:px-8 py-16 lg:py-20">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="block">
+            <Link href="/" className="block">
               <img src="/logo.png" alt="Navrademy logo" className="h-[18px] w-auto object-contain brightness-105 mb-3" />
             </Link>
             <p className="mt-3 text-sm text-white/40 leading-relaxed max-w-[200px]">
@@ -50,7 +52,7 @@ const Footer = () => {
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
-                      to={link.href}
+                      href={link.href}
                       className="text-sm text-white/35 hover:text-primary transition-colors duration-200"
                     >
                       {link.label}

@@ -1,9 +1,11 @@
 "use client"
+
 import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
   { label: "About", href: "/about" },
@@ -27,22 +29,22 @@ const navLinks = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === "/") return location.pathname === "/";
-    return location.pathname.startsWith(href);
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
   };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
-      {/* Top accent bar */}
       <div className="h-[3px] gradient-bg-rich" />
 
       <div className="bg-white/[0.97] backdrop-blur-xl border-b border-border/40 shadow-[0_1px_8px_-2px_hsl(210,55%,12%,0.06)]">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
+          
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group shrink-0">
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
             <img
               src="/logo.png"
               alt="Navrademy logo"
@@ -61,16 +63,21 @@ const Navbar = () => {
                   onMouseLeave={() => setCoursesOpen(false)}
                 >
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className={`nav-link-premium flex items-center gap-1 ${
-                      isActive("/courses") || location.pathname === "/waitlist"
+                      isActive("/courses") || pathname === "/waitlist"
                         ? "text-primary active"
                         : "text-foreground/65 hover:text-foreground"
                     }`}
                   >
                     {link.label}
-                    <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${coursesOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown
+                      className={`h-3 w-3 transition-transform duration-200 ${
+                        coursesOpen ? "rotate-180" : ""
+                      }`}
+                    />
                   </Link>
+
                   <AnimatePresence>
                     {coursesOpen && (
                       <motion.div
@@ -83,9 +90,9 @@ const Navbar = () => {
                         {link.children.map((child) => (
                           <Link
                             key={child.label}
-                            to={child.href}
+                            href={child.href}
                             className={`block rounded-lg px-3.5 py-2.5 text-sm transition-all duration-200 ${
-                              location.pathname === child.href
+                              pathname === child.href
                                 ? "text-primary bg-primary/8 font-medium"
                                 : "text-foreground/65 hover:text-foreground hover:bg-secondary/80"
                             }`}
@@ -100,7 +107,7 @@ const Navbar = () => {
               ) : (
                 <Link
                   key={link.label}
-                  to={link.href}
+                  href={link.href}
                   className={`nav-link-premium ${
                     isActive(link.href)
                       ? "text-primary active"
@@ -115,8 +122,8 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
-            <Button variant="hero" size="default" className="rounded-full px-6 text-[13px]" asChild>
-              <Link to="/courses">Get Started</Link>
+            <Button variant="hero" size="default" className="rounded-full px-6 text-[13px]">
+              <Link href="/courses">Get Started</Link>
             </Button>
           </div>
 
@@ -145,22 +152,23 @@ const Navbar = () => {
               {navLinks.map((link) => (
                 <div key={link.label}>
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                       isActive(link.href)
                         ? "text-primary bg-primary/8"
                         : "text-foreground/65 hover:text-foreground hover:bg-secondary/60"
                     }`}
-                    onClick={() => !link.children && setMobileOpen(false)}
+                    onClick={() => setMobileOpen(false)}
                   >
                     {link.label}
                   </Link>
+
                   {link.children && (
                     <div className="pl-4 mt-1 space-y-0.5 border-l-2 border-primary/20 ml-4">
                       {link.children.map((child) => (
                         <Link
                           key={child.label}
-                          to={child.href}
+                          href={child.href}
                           className="block px-3 py-2 text-sm text-foreground/55 hover:text-foreground transition-colors"
                           onClick={() => setMobileOpen(false)}
                         >
@@ -171,9 +179,12 @@ const Navbar = () => {
                   )}
                 </div>
               ))}
+
               <div className="pt-4 px-2">
-                <Button variant="hero" size="lg" className="w-full rounded-full" asChild>
-                  <Link to="/courses" onClick={() => setMobileOpen(false)}>Get Started</Link>
+                <Button variant="hero" size="lg" className="w-full rounded-full">
+                  <Link href="/courses" onClick={() => setMobileOpen(false)}>
+                    Get Started
+                  </Link>
                 </Button>
               </div>
             </div>

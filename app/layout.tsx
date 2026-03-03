@@ -1,5 +1,11 @@
 import "./globals.css";
-import "./app.css";
+import Providers from "./providers";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Navrademy",
+  description: "Navrademy platform",
+};
 
 export default function RootLayout({
   children,
@@ -8,10 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

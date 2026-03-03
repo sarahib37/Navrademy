@@ -1,7 +1,9 @@
+"use client"
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, HelpCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   Accordion,
   AccordionContent,
@@ -76,7 +78,7 @@ const FAQPreviewSection = () => {
 
           <div className="text-center mt-10">
             <Button variant="heroOutline" size="lg" className="rounded-full" asChild>
-              <Link to="/faq">
+              <Link href="/faq">
                 View All FAQs
                 <ArrowRight className="h-4 w-4" />
               </Link>

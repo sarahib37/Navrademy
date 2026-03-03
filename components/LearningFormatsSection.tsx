@@ -1,7 +1,8 @@
+"use client"
+
 import { motion } from "framer-motion";
 import { Video, BookOpen, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 
 const formats = [
   {
@@ -72,10 +73,10 @@ const LearningFormatsSection = () => {
               <h3 className="text-xl font-heading font-bold mb-3 group-hover:text-primary transition-colors">{item.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">{item.description}</p>
               <Button variant="heroOutline" size="default" className="w-full rounded-full" asChild>
-                <Link to={item.link}>
+                <a href={item.link}>
                   {item.cta}
                   <ArrowRight className="h-4 w-4" />
-                </Link>
+                </a>
               </Button>
             </motion.div>
           ))}
