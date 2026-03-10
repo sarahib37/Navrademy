@@ -44,7 +44,7 @@ const Waitlist = () => {
             <Button
                 variant="hero"
                 size="lg"
-                onClick={() => window.open("https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform", "_blank")}
+                onClick={() => window.open("https://forms.gle/wvkgPe6GhNX1Fjus5", "_blank")}
             >
                 Join the Waitlist
               </Button>
