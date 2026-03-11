@@ -83,16 +83,15 @@ const CourseCard = ({ course, index, onApply }: {
       </div>
     </div>
 
-    {/* payment activation
     <Button variant="hero" size="lg" onClick={() => onApply(course)}>
       Apply Now <ArrowRight className="h-4 w-4" />
-    </Button> */}
+    </Button>
 
-    <Button variant="hero" size="lg">
+    {/* <Button variant="hero" size="lg">
       <a href="/waitlist">
         Apply Now <ArrowRight className="h-4 w-4" />
       </a>
-    </Button>
+    </Button> */}
   </motion.div>
 );
 

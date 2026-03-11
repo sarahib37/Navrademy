@@ -2,6 +2,34 @@ export const COURSES = [
   {
     category: "Live Course",
     type: "career",
+    title: "Testing",
+    id: "test",
+    price: 10000,
+    duration: "12 Weeks",
+    students: "20+",
+    level: "Beginner",
+    description:
+      "Test",
+
+    whoFor: [
+      "Test"
+    ],
+
+    notFor: [
+      "Test"
+    ],
+
+    outcomes: [
+      "Test"
+    ],
+
+    curriculum: [
+      "Test"
+    ]
+  },
+  {
+    category: "Live Course",
+    type: "career",
     title: "Digital Growth Marketing Specialist",
     id: "DGM",
     price: 500000,
