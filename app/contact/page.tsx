@@ -29,7 +29,7 @@ const Contact = () => {
   
     try
     {
-      const res = await fetch("/contact/api/contact", {
+      const res = await fetch("/contact/api/route", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

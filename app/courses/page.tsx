@@ -8,22 +8,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Users, Signal, BookOpen } from "lucide-react";
 import Link from "next/link";
+import { COURSES } from "@/lib/courses";
 
-const liveCourses = [
-  { title: "Digital Marketing Mastery", duration: "8 Weeks", students: "320+", level: "Beginner", description: "Learn SEO, social media, paid ads, and analytics from practitioners running real campaigns." },
-  { title: "UI/UX Design Bootcamp", duration: "10 Weeks", students: "250+", level: "Intermediate", description: "From wireframes to high-fidelity prototypes. Build a portfolio that gets you hired." },
-  { title: "Product Management", duration: "12 Weeks", students: "180+", level: "Advanced", description: "Strategy, roadmapping, stakeholder management — everything you need to lead product teams." },
-];
-
-const selfPaced = [
-  { title: "Data Analytics Fundamentals", duration: "6 Weeks", students: "480+", level: "Beginner", description: "Excel, SQL, Power BI and Python basics. Turn raw data into actionable insights." },
-  { title: "Web Development", duration: "14 Weeks", students: "600+", level: "Beginner", description: "HTML, CSS, JavaScript, React. Build real projects and deploy them to the web." },
-];
-
-const upcoming = [
-  { title: "AI & Automation", duration: "8 Weeks", students: "Waitlist", level: "Intermediate", description: "Leverage AI tools, prompt engineering, and automation workflows to 10x your productivity." },
-  { title: "Content Strategy", duration: "6 Weeks", students: "Waitlist", level: "Beginner", description: "Learn to plan, create, and distribute content that drives real business results." },
-];
+const liveCourses = COURSES.filter(c => c.category === "Live Course")
+const selfPaced = COURSES.filter(c => c.category === "Self Paced")
+const upcoming = COURSES.filter(c => c.category === "Upcoming")
 
 const CourseCard = ({
   course,
@@ -126,7 +115,8 @@ export default function Courses() {
             <div key={section.label} className="mb-16">
               <div className="section-eyebrow">{section.label}</div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {section.data.map((c, i) => (
+              {section.data.length > 0 ? (
+                section.data.map((c, i) => (
                   <motion.div
                     key={c.title}
                     initial={{ opacity: 0, y: 20 }}
@@ -136,7 +126,26 @@ export default function Courses() {
                   >
                     <CourseCard course={c} variant={section.variant} />
                   </motion.div>
-                ))}
+                ))
+              ) : (
+                <div className="col-span-full accent-card p-8 text-center">
+                  <h3 className="text-xl font-heading font-bold mb-3">
+                    No {section.label} Available Yet
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground mb-6">
+                    We're preparing new {section.label.toLowerCase()}. Join the waitlist to
+                    be notified when they launch.
+                  </p>
+
+                  <Button variant="hero" asChild>
+                    <Link href="/waitlist">
+                      Join Waitlist <ArrowRight className="h-4 w-4 ml-2" />
+                    </Link>
+                  </Button>
+                </div>
+              )}
+
               </div>
             </div>
           ))}

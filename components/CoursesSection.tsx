@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,99 +19,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import Link from "next/link";
-
-const courses = [
-  {
-    title: "Digital Marketing Mastery",
-    category: "Live Course",
-    duration: "8 Weeks",
-    students: "320+",
-    level: "Beginner",
-    description:
-      "Learn SEO, social media, paid ads, and analytics from practitioners running real campaigns.",
-    highlights: [
-      "SEO & Content Strategy",
-      "Social Media Marketing",
-      "Paid Advertising (Google & Meta)",
-      "Analytics & Reporting",
-    ],
-  },
-  {
-    title: "UI/UX Design Bootcamp",
-    category: "Live Course",
-    duration: "10 Weeks",
-    students: "250+",
-    level: "Intermediate",
-    description:
-      "From wireframes to high-fidelity prototypes. Build a portfolio that gets you hired.",
-    highlights: [
-      "User Research & Personas",
-      "Wireframing & Prototyping",
-      "Figma Mastery",
-      "Portfolio Development",
-    ],
-  },
-  {
-    title: "Data Analytics Fundamentals",
-    category: "Self-Paced",
-    duration: "6 Weeks",
-    students: "480+",
-    level: "Beginner",
-    description:
-      "Excel, SQL, Power BI and Python basics. Turn raw data into actionable insights.",
-    highlights: [
-      "Excel & Google Sheets",
-      "SQL for Data Analysis",
-      "Power BI Dashboards",
-      "Python Basics",
-    ],
-  },
-  {
-    title: "Product Management",
-    category: "Live Course",
-    duration: "12 Weeks",
-    students: "180+",
-    level: "Advanced",
-    description:
-      "Strategy, roadmapping, stakeholder management — everything you need to lead product teams.",
-    highlights: [
-      "Product Strategy",
-      "Roadmap Planning",
-      "Stakeholder Management",
-      "Agile & Scrum",
-    ],
-  },
-  {
-    title: "Web Development",
-    category: "Self-Paced",
-    duration: "14 Weeks",
-    students: "600+",
-    level: "Beginner",
-    description:
-      "HTML, CSS, JavaScript, React. Build real projects and deploy them to the web.",
-    highlights: [
-      "HTML & CSS Fundamentals",
-      "JavaScript & TypeScript",
-      "React Framework",
-      "Deployment & Git",
-    ],
-  },
-  {
-    title: "AI & Automation",
-    category: "Upcoming",
-    duration: "8 Weeks",
-    students: "Waitlist",
-    level: "Intermediate",
-    description:
-      "Leverage AI tools, prompt engineering, and automation workflows to 10x your productivity.",
-    highlights: [
-      "Prompt Engineering",
-      "AI Tools & APIs",
-      "Workflow Automation",
-      "Real-World Projects",
-    ],
-  },
-];
+import { COURSES } from "@/lib/courses";
 
 const categoryStyles: Record<string, string> = {
   "Live Course": "bg-primary/10 text-primary border border-primary/20",
@@ -120,14 +28,28 @@ const categoryStyles: Record<string, string> = {
   Upcoming: "bg-muted text-muted-foreground border border-border/50",
 };
 
+function getRandomCourses(courses: typeof COURSES, count: number) {
+  const shuffled = [...courses];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.slice(0, count);
+}
+
 export default function CoursesSection() {
-  const [selectedCourse, setSelectedCourse] =
-    useState<typeof courses[0] | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<typeof COURSES[0] | null>(null);
+  const [randomCourses, setRandomCourses] = useState<typeof COURSES>([]);
+
+  useEffect(() => {
+    setRandomCourses(getRandomCourses(COURSES, 6));
+  }, []);
 
   const getHref = (category: string) => {
     if (category === "Upcoming") return "/waitlist";
-    if (category === "Live Course") return "/courses/live";
-    return "/courses/self-paced";
+    return "/courses/live";
   };
 
   const getButtonText = (category: string) => {
@@ -165,9 +87,9 @@ export default function CoursesSection() {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course, i) => (
+          {randomCourses.map((course, i) => (
             <motion.div
-              key={course.title}
+              key={course.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -256,7 +178,7 @@ export default function CoursesSection() {
                     What You'll Learn
                   </h4>
                   <ul className="space-y-2">
-                    {selectedCourse.highlights.map((item) => (
+                    {selectedCourse.curriculum.map((item) => (
                       <li
                         key={item}
                         className="flex items-center gap-2 text-sm text-muted-foreground"

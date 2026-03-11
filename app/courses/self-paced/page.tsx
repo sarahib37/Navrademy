@@ -6,37 +6,11 @@ import CTASection from "@/components/CTASection";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Clock, Play } from "lucide-react";
+import { Sparkles, Mail } from "lucide-react";
+import Link from "next/link";
+import { COURSES } from "@/lib/courses";
 
-const programs = [
-  {
-    title: "Data Analytics Fundamentals",
-    duration: "6 Weeks",
-    type: "Recorded Program",
-    description: "Master Excel, SQL, Power BI and Python basics. Turn raw data into actionable business insights.",
-    outcomes: ["Clean and analyze datasets", "Build interactive dashboards", "Write basic SQL queries", "Present data-driven recommendations"],
-  },
-  {
-    title: "Web Development",
-    duration: "14 Weeks",
-    type: "Recorded Program",
-    description: "HTML, CSS, JavaScript, and React. Build real projects and deploy them to the web.",
-    outcomes: ["Build responsive websites", "Create React applications", "Deploy projects to production", "Write clean, maintainable code"],
-  },
-  {
-    title: "Social Media Toolkit",
-    duration: "2 Weeks",
-    type: "Toolkit",
-    description: "Templates, strategies, and frameworks for managing social media like a professional.",
-    outcomes: ["Content calendar templates", "Platform-specific strategies", "Analytics tracking framework", "Engagement playbook"],
-  },
-  {
-    title: "Freelancing Quick Start",
-    duration: "1 Week",
-    type: "Learning Kit",
-    description: "Everything you need to launch your freelance career — pricing, proposals, client management.",
-    outcomes: ["Set competitive pricing", "Write winning proposals", "Manage client relationships", "Build a sustainable pipeline"],
-  },
-];
+const SelfPaced = COURSES.filter(c => c.category === "Self Paced")
 
 const SelfPacedCourses = () => {
   return (
@@ -53,8 +27,9 @@ const SelfPacedCourses = () => {
 
       <section className="section-padding">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            {programs.map((p, i) => (
+        <div className="grid md:grid-cols-2 gap-8">
+          {SelfPaced.length > 0 ? (
+            SelfPaced.map((p, i) => (
               <motion.div
                 key={p.title}
                 initial={{ opacity: 0, y: 20 }}
@@ -64,30 +39,72 @@ const SelfPacedCourses = () => {
                 className="elevated-card p-8 group flex flex-col"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-accent/20 text-accent">{p.type}</span>
-                  <span className="flex items-center gap-1 text-sm text-muted-foreground"><Clock className="h-4 w-4" />{p.duration}</span>
+                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-accent/20 text-accent">
+                    {p.type}
+                  </span>
+
+                  <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    {p.duration}
+                  </span>
                 </div>
-                <h3 className="text-xl font-heading font-bold mb-2 group-hover:text-primary transition-colors">{p.title}</h3>
-                <p className="text-sm text-muted-foreground mb-6 leading-relaxed">{p.description}</p>
+
+                <h3 className="text-xl font-heading font-bold mb-2 group-hover:text-primary transition-colors">
+                  {p.title}
+                </h3>
+
+                <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                  {p.description}
+                </p>
+
                 <div className="mb-6 flex-1">
-                  <h4 className="font-heading font-bold text-sm mb-3">What You'll Get</h4>
+                  <h4 className="font-heading font-bold text-sm mb-3">
+                    What You'll Get
+                  </h4>
+
                   <ul className="space-y-2">
-                    {p.outcomes.map((o) => (
-                      <li key={o} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    {p.outcomes?.map((o: string) => (
+                      <li
+                        key={o}
+                        className="flex items-start gap-2 text-sm text-muted-foreground"
+                      >
                         <CheckCircle className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                         {o}
                       </li>
                     ))}
                   </ul>
                 </div>
+
                 <Button variant="hero" className="w-full" asChild>
                   <a href="/waitlist">
                     Enroll Now <ArrowRight className="h-4 w-4" />
                   </a>
                 </Button>
               </motion.div>
-            ))}
-          </div>
+            ))
+          ) : (
+            <div className="accent-card p-10 lg:p-12 col-span-full text-center">
+              <div className="w-16 h-16 rounded-full gradient-bg flex items-center justify-center mx-auto mb-6 glow-coral-sm">
+                <Sparkles className="h-8 w-8 text-primary-foreground" />
+              </div>
+
+              <h3 className="font-heading font-bold text-2xl mb-3">
+                Coming Soon
+              </h3>
+
+              <p className="text-muted-foreground mb-8 leading-relaxed">
+                We're currently building our self-paced course library. Be the first to know when new courses launch.
+              </p>
+
+              <Button variant="hero" size="lg" className="w-full" asChild>
+                <Link href="/waitlist">
+                  <Mail className="h-4 w-4 mr-2" />
+                  Join the Waitlist
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
         </div>
       </section>
 

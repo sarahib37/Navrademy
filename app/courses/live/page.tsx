@@ -1,46 +1,108 @@
 "use client"
+
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
+import EmailModal from "@/components/EmailModal";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Clock, Users, Signal } from "lucide-react";
+import { ArrowRight, CheckCircle, Clock, Users, Signal, Layers, BookOpen, Building2 } from "lucide-react";
+import { COURSES } from "@/lib/courses";
 
-const courses = [
+const careerPrograms = COURSES.filter(c => c.type === "career")
+const individualCourses = COURSES.filter(c => c.type === "course")
+const corporatePrograms = COURSES.filter(c => c.type === "corporate")
+
+type Course = typeof careerPrograms[0];
+
+const sections = [
   {
-    title: "Digital Marketing Mastery",
-    duration: "8 Weeks",
-    students: "320+",
-    description: "Master SEO, social media marketing, paid advertising, email marketing, and analytics. Run real campaigns during the course.",
-    whoFor: ["Aspiring digital marketers", "Business owners wanting to grow online", "Marketing professionals upgrading skills"],
-    notFor: ["Those looking for passive income shortcuts", "Anyone not willing to commit 8-10 hours/week"],
-    outcomes: ["Run end-to-end marketing campaigns", "Analyze and optimize ad performance", "Build a personal marketing portfolio", "Earn a Navrademy certification"],
-    curriculum: ["SEO & Content Strategy", "Social Media Marketing", "Google & Meta Ads", "Email Marketing Automation", "Analytics & Reporting", "Campaign Project"],
+    key: "career",
+    icon: Layers,
+    label: "Career Programs",
+    eyebrow: "Skill Clusters",
+    description: "Comprehensive, multi-module programs designed to take you from beginner to job-ready in a specific career path.",
+    courses: careerPrograms,
   },
   {
-    title: "UI/UX Design Bootcamp",
-    duration: "10 Weeks",
-    students: "250+",
-    description: "From user research to high-fidelity prototypes. Build a design portfolio that gets you hired at top companies.",
-    whoFor: ["Career switchers into design", "Frontend developers wanting design skills", "Graphic designers transitioning to UX"],
-    notFor: ["Those expecting to skip research fundamentals", "Anyone not willing to iterate on feedback"],
-    outcomes: ["Conduct user research and testing", "Create wireframes and prototypes in Figma", "Build a 3-project design portfolio", "Present design decisions confidently"],
-    curriculum: ["Design Thinking & Research", "Information Architecture", "Wireframing & Prototyping", "Visual Design Systems", "Usability Testing", "Portfolio Project"],
+    key: "individual",
+    icon: BookOpen,
+    label: "Individual Courses",
+    eyebrow: "Focused Skills",
+    description: "Shorter, targeted courses to master a specific tool or skill. Perfect for upskilling fast.",
+    courses: individualCourses,
   },
   {
-    title: "Product Management",
-    duration: "12 Weeks",
-    students: "180+",
-    description: "Learn strategy, roadmapping, stakeholder management, and everything you need to lead product teams effectively.",
-    whoFor: ["Aspiring product managers", "Project managers transitioning to product", "Founders building their own products"],
-    notFor: ["Those looking for a quick certification without depth", "Anyone not comfortable with ambiguity"],
-    outcomes: ["Define product strategy and vision", "Build and prioritize product roadmaps", "Run sprint planning and retrospectives", "Communicate with technical and non-technical stakeholders"],
-    curriculum: ["Product Strategy & Vision", "User Stories & Requirements", "Roadmapping & Prioritization", "Agile & Scrum", "Stakeholder Communication", "Capstone Product Launch"],
+    key: "corporate",
+    icon: Building2,
+    label: "Corporate Upskilling Programs",
+    eyebrow: "For Teams & Organizations",
+    description: "Custom training programs designed for teams. Build organizational capability at scale.",
+    courses: corporatePrograms,
   },
 ];
 
+const CourseCard = ({ course, index, onApply }: { 
+  course: Course; 
+  index: number; 
+  onApply: (course: Course) => void 
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: index * 0.1 }}
+    className="accent-card p-8 lg:p-10"
+  >
+    <div className="flex flex-wrap items-center gap-4 mb-6">
+      <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/20 text-primary">Live Course</span>
+      <span className="flex items-center gap-1 text-sm text-muted-foreground"><Clock className="h-4 w-4" />{course.duration}</span>
+      <span className="flex items-center gap-1 text-sm text-muted-foreground"><Users className="h-4 w-4" />{course.students}</span>
+    </div>
+    <h3 className="text-2xl md:text-3xl font-heading font-bold mb-3">{course.title}</h3>
+    <p className="text-muted-foreground mb-8 max-w-2xl">{course.description}</p>
+
+    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div>
+        <h4 className="font-heading font-bold text-sm mb-3 text-primary">Who It's For</h4>
+        <ul className="space-y-2">{course.whoFor.map((item) => <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground"><CheckCircle className="h-4 w-4 text-primary mt-0.5 shrink-0" />{item}</li>)}</ul>
+      </div>
+      <div>
+        <h4 className="font-heading font-bold text-sm mb-3 text-destructive">Not For</h4>
+        <ul className="space-y-2">{course.notFor.map((item) => <li key={item} className="text-sm text-muted-foreground">• {item}</li>)}</ul>
+      </div>
+      <div>
+        <h4 className="font-heading font-bold text-sm mb-3 text-primary">Outcomes</h4>
+        <ul className="space-y-2">{course.outcomes.map((item) => <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground"><CheckCircle className="h-4 w-4 text-primary mt-0.5 shrink-0" />{item}</li>)}</ul>
+      </div>
+      <div>
+        <h4 className="font-heading font-bold text-sm mb-3 text-primary">Curriculum</h4>
+        <ul className="space-y-2">{course.curriculum.map((item, j) => <li key={item} className="text-sm text-muted-foreground">{j + 1}. {item}</li>)}</ul>
+      </div>
+    </div>
+
+    {/* payment activation
+    <Button variant="hero" size="lg" onClick={() => onApply(course)}>
+      Apply Now <ArrowRight className="h-4 w-4" />
+    </Button> */}
+
+    <Button variant="hero" size="lg">
+      <a href="/waitlist">
+        Apply Now <ArrowRight className="h-4 w-4" />
+      </a>
+    </Button>
+  </motion.div>
+);
+
 const LiveCourses = () => {
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
+  const handleApply = (course: Course) => {
+    setSelectedCourse(course);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -53,82 +115,40 @@ const LiveCourses = () => {
         subtitle="Real-time interaction, projects, and mentorship with industry professionals."
       />
 
-      <section className="section-padding">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="space-y-12">
-            {courses.map((course, i) => (
-              <motion.div
-                key={course.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="accent-card p-8 lg:p-10"
-              >
-                <div className="flex flex-wrap items-center gap-4 mb-6">
-                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/20 text-primary">
-                    Live Course
-                  </span>
-                  <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4" />{course.duration}
-                  </span>
-                  <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Users className="h-4 w-4" />{course.students} students
-                  </span>
-                </div>
-                <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">{course.title}</h2>
-                <p className="text-muted-foreground mb-8 max-w-2xl">{course.description}</p>
+      {sections.map((section) => (
+        <section key={section.key} className="section-padding">
+          <div className="container mx-auto px-4 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-10"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <section.icon className="h-5 w-5 text-primary" />
+                <span className="section-eyebrow !mb-0">{section.eyebrow}</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-heading font-bold mb-2">{section.label}</h2>
+              <p className="text-muted-foreground max-w-2xl">{section.description}</p>
+            </motion.div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                  <div>
-                    <h4 className="font-heading font-bold text-sm mb-3 text-primary">Who It's For</h4>
-                    <ul className="space-y-2">
-                      {course.whoFor.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <CheckCircle className="h-4 w-4 text-primary mt-0.5 shrink-0" />{item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-heading font-bold text-sm mb-3 text-destructive">Not For</h4>
-                    <ul className="space-y-2">
-                      {course.notFor.map((item) => (
-                        <li key={item} className="text-sm text-muted-foreground">• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-heading font-bold text-sm mb-3 text-primary">Outcomes</h4>
-                    <ul className="space-y-2">
-                      {course.outcomes.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                          <CheckCircle className="h-4 w-4 text-primary mt-0.5 shrink-0" />{item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-heading font-bold text-sm mb-3 text-primary">Curriculum</h4>
-                    <ul className="space-y-2">
-                      {course.curriculum.map((item, j) => (
-                        <li key={item} className="text-sm text-muted-foreground">{j + 1}. {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <Button variant="hero" size="lg" asChild>
-                  <a href="/waitlist">
-                    Apply Now <ArrowRight className="h-4 w-4" />
-                  </a>
-                </Button>
-              </motion.div>
-            ))}
+            <div className="space-y-12">
+              {section.courses.map((course, i) => (
+                <CourseCard key={course.title} course={course} index={i} onApply={handleApply} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ))}
 
+      <EmailModal
+        open={!!selectedCourse}
+        onOpenChange={(open) => {
+          if (!open) setSelectedCourse(null);
+        }}
+        courseId={selectedCourse?.id ?? ""}
+        courseTitle={selectedCourse?.title ?? ""}
+      />
       <CTASection />
       <Footer />
     </div>
