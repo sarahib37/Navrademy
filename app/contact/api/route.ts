@@ -1,15 +1,10 @@
-// pages/api/contact.ts
-import type { NextApiRequest, NextApiResponse } from "next";
+// app/contact/api/route.ts
+import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    return res.status(405).end("Method Not Allowed");
-  }
-
-  const { name, email, subject, message } = req.body;
-
+export async function POST(req: NextRequest) {
   try {
+    const { name, email, subject, message } = await req.json();
+
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -31,8 +26,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw new Error(errText || "Failed to send email");
     }
 
-    return res.status(200).json({ success: true });
+    return NextResponse.json({ success: true });
   } catch (err: any) {
-    return res.status(500).json({ error: err.message });
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
+}
+
+// Optional: handle unsupported methods
+export async function GET() {
+  return NextResponse.json(
+    { error: "GET method not allowed" },
+    { status: 405 }
+  );
 }
