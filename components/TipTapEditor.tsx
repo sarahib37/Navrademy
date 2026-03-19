@@ -1,0 +1,64 @@
+"use client";
+
+import { useEffect } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+// import TextAlign from "@tiptap/extension-text-align";
+import Placeholder from "@tiptap/extension-placeholder";
+import Link from "@tiptap/extension-link";
+
+import {EditorToolbar} from "./EditorToolbar";
+
+interface TiptapEditorProps {
+  content: string;
+  onChange: (value: string) => void;
+}
+
+export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+      }),
+      Underline,
+      // TextAlign.configure({
+      //   types: ["heading", "paragraph"],
+      // }),
+      Placeholder.configure({
+        placeholder: "Start writing your blog post...",
+      }),
+      Link.configure({
+        openOnClick: false,
+      }),
+    ],
+    content,
+    onUpdate: ({ editor } : any) => {
+      onChange(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class:
+          "prose prose-sm sm:prose max-w-none min-h-[300px] p-4 focus:outline-none text-foreground",
+      },
+    },
+    immediatelyRender: false,
+  });
+
+  useEffect(() => {
+    if (editor && content) {
+      editor.commands.setContent(content);
+    }
+  }, [content, editor]);
+  
+
+  if (!editor) return null;
+
+  return (
+    <div className="border border-border rounded-xl overflow-hidden bg-card">
+      <EditorToolbar editor={editor} />
+      <EditorContent editor={editor} />
+    </div>
+  );
+};

@@ -45,11 +45,13 @@ const Navbar = () => {
           
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <img
-              src="/logo.png"
-              alt="Navrademy logo"
-              className="h-[20px] md:h-[22px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-            />
+            <div className="h-10 flex items-center">            
+              <img
+                src="/logo.png"
+                alt="Navrademy logo"
+                className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
           </Link>
 
           {/* Desktop Nav */}

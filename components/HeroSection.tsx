@@ -7,14 +7,15 @@ import { ArrowRight, Sparkles, Play } from "lucide-react";
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden pt-[75px] dark-section-deep">
-      {/* Pattern overlay */}
-      <div className="absolute inset-0 pattern-overlay pointer-events-none" />
+      
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 pattern-overlay" />
 
-      {/* Ambient glows — coral only */}
-      <div className="absolute top-[15%] right-[20%] w-[500px] h-[500px] rounded-full bg-primary/[0.07] blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-[20%] left-[5%] w-[350px] h-[350px] rounded-full bg-coral-warm/[0.04] blur-[120px] pointer-events-none" />
-      <div className="absolute top-[60%] right-[5%] w-[200px] h-[200px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
-
+        <div className="absolute top-[15%] right-[20%] w-[500px] h-[500px] rounded-full bg-primary/[0.07] blur-[150px]" />
+        <div className="absolute bottom-[20%] left-[5%] w-[350px] h-[350px] rounded-full bg-coral-warm/[0.04] blur-[120px]" />
+        <div className="absolute top-[60%] right-[5%] w-[200px] h-[200px] rounded-full bg-primary/[0.05] blur-[80px]" />
+      </div>
+      
       {/* Geometric accents */}
       <div className="absolute top-40 right-20 w-px h-28 bg-gradient-to-b from-transparent via-primary/25 to-transparent hidden lg:block" />
       <div className="absolute bottom-40 left-20 w-px h-20 bg-gradient-to-b from-transparent via-primary/15 to-transparent hidden lg:block" />
