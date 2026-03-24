@@ -5,9 +5,9 @@ import { generateToken } from "@/lib/generateToken";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { email, courseId , courseTitle} = body;
+    const { email, courseId, courseTitle, courseAmount} = body;
 
-    if (!email || !courseId || !courseTitle) {
+    if (!email || !courseId || !courseTitle || !courseAmount) {
       return NextResponse.json(
         { error: "Missing fields" },
         { status: 400 }
@@ -23,7 +23,8 @@ export async function POST(req: Request) {
       email,
       token,
       courseId,
-      courseTitle,  
+      courseTitle, 
+      courseAmount, 
       verified: false,
       expiresAt,
       createdAt: new Date(),

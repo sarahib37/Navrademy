@@ -19,16 +19,18 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import Link from "next/link";
-import { COURSES } from "@/lib/courses";
+import { getCourses } from "@/lib/courses";
+import type { Course } from "@/lib/courses";
+
 
 const categoryStyles: Record<string, string> = {
-  "Live Course": "bg-primary/10 text-primary border border-primary/20",
-  "Self-Paced":
+  live: "bg-primary/10 text-primary border border-primary/20",
+  "self-paced":
     "bg-coral-warm/10 text-coral-warm border border-coral-warm/20",
-  Upcoming: "bg-muted text-muted-foreground border border-border/50",
+  upcoming: "bg-muted text-muted-foreground border border-border/50",
 };
 
-function getRandomCourses(courses: typeof COURSES, count: number) {
+function getRandomCourses(courses: Course[], count: number) {
   const shuffled = [...courses];
 
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -40,32 +42,46 @@ function getRandomCourses(courses: typeof COURSES, count: number) {
 }
 
 export default function CoursesSection() {
-  const [selectedCourse, setSelectedCourse] = useState<typeof COURSES[0] | null>(null);
-  const [randomCourses, setRandomCourses] = useState<typeof COURSES>([]);
+  const [randomCourses, setRandomCourses] = useState<Course[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setRandomCourses(getRandomCourses(COURSES, 6));
+    const fetchCourses = async () => {
+      try {
+        const data = await getCourses()
+        const availableCourses = data.filter(c => c.category !== "upcoming");
+        setRandomCourses(getRandomCourses(availableCourses, 6));
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
   }, []);
 
-  const getHref = (category: string) => {
-    if (category === "Upcoming") return "/waitlist";
-    return "/courses/live";
+  const getHref = (category: string, id: string) => {
+    if (category === "upcoming") return "/waitlist";
+    return `/courses/${id}`;
   };
 
   const getButtonText = (category: string) => {
-    if (category === "Upcoming") return "Join Waitlist";
-    if (category === "Live Course") return "Apply Now";
+    if (category === "upcoming") return "Join Waitlist";
+    if (category === "live") return "Apply Now";
     return "Enroll Now";
   };
 
   return (
     <section id="courses" className="section-padding gradient-bg-warm">
       <div className="container mx-auto px-4 lg:px-8">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
           className="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-4"
         >
           <div>
@@ -86,86 +102,98 @@ export default function CoursesSection() {
           </Button>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {randomCourses.map((course, i) => (
-            <motion.div
-              key={course.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="elevated-card rounded-xl overflow-hidden group cursor-pointer"
-              onClick={() => setSelectedCourse(course)}
-            >
-              <div className="p-6">
-                <span
-                  className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryStyles[course.category]}`}
-                >
-                  {course.category}
-                </span>
-
-                <h3 className="text-xl font-heading font-bold mt-4 mb-2 group-hover:text-primary transition-colors">
-                  {course.title}
-                </h3>
-
-                <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
-                  {course.description}
-                </p>
-
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5 text-primary/60" />
-                    {course.duration}
+        {/* STATES */}
+        {loading ? (
+          <div className="text-center py-16 text-muted-foreground">
+            Loading courses...
+          </div>
+        ) : randomCourses.length === 0 ? (
+          <div className="accent-card p-10 text-center rounded-xl">
+            <h3 className="text-xl font-heading font-bold mb-3">
+              No Courses Available Yet
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              We're preparing amazing programs for you. Join the waitlist to be notified.
+            </p>
+            <Button asChild>
+              <Link href="/waitlist">
+                Join Waitlist <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {randomCourses.map((course, i) => (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="elevated-card rounded-xl overflow-hidden group cursor-pointer"
+                onClick={() => setSelectedCourse(course)}
+              >
+                <div className="p-6">
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryStyles[course.category]}`}>
+                    {course.category}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Users className="h-3.5 w-3.5 text-primary/60" />
-                    {course.students}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Signal className="h-3.5 w-3.5 text-primary/60" />
-                    {course.level}
-                  </span>
+
+                  <h3 className="text-xl font-heading font-bold mt-4 mb-2">
+                    {course.title}
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground mb-5">
+                    {course.description}
+                  </p>
+
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3.5 w-3.5" />
+                      {course.duration}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="h-3.5 w-3.5" />
+                      {course.students}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Signal className="h-3.5 w-3.5" />
+                      {course.level}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="px-6 pb-6">
-                <Button
-                  variant={
-                    course.category === "Upcoming" ? "heroOutline" : "hero"
-                  }
-                  size="default"
-                  className="w-full"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedCourse(course);
-                  }}
-                >
-                  {course.category === "Upcoming"
-                    ? "Join Waitlist"
-                    : "Learn More"}
-                </Button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                <div className="px-6 pb-6">
+                  <Button
+                    variant={course.category === "upcoming" ? "heroOutline" : "hero"}
+                    className="w-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedCourse(course);
+                    }}
+                  >
+                    {course.category === "upcoming" ? "Join Waitlist" : "Learn More"}
+                  </Button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
 
-      <Dialog
-        open={!!selectedCourse}
-        onOpenChange={(open) => !open && setSelectedCourse(null)}
-      >
+      {/* MODAL */}
+      <Dialog open={!!selectedCourse} onOpenChange={() => setSelectedCourse(null)}>
         <DialogContent className="sm:max-w-[640px] rounded-2xl p-0 overflow-hidden">
           {selectedCourse && (
             <>
               <div className="gradient-bg-rich p-6 pb-8">
                 <DialogHeader>
-                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-white/20 text-white w-fit mb-3">
+                  <span className="text-xs px-2.5 py-1 rounded-full bg-white/20 text-white w-fit mb-3">
                     {selectedCourse.category}
                   </span>
-                  <DialogTitle className="text-2xl font-heading font-bold text-white">
+                  <DialogTitle className="text-2xl text-white">
                     {selectedCourse.title}
                   </DialogTitle>
-                  <DialogDescription className="text-white/80 mt-1">
+                  <DialogDescription className="text-white/80">
                     {selectedCourse.description}
                   </DialogDescription>
                 </DialogHeader>
@@ -173,27 +201,25 @@ export default function CoursesSection() {
 
               <div className="p-6 space-y-6">
                 <div>
-                  <h4 className="font-heading font-semibold text-foreground flex items-center gap-2 mb-3">
+                  <h4 className="font-semibold flex items-center gap-2 mb-3">
                     <BookOpen className="h-4 w-4 text-primary" />
                     What You'll Learn
                   </h4>
+
                   <ul className="space-y-2">
-                    {selectedCourse.curriculum.map((item) => (
-                      <li
-                        key={item}
-                        className="flex items-center gap-2 text-sm text-muted-foreground"
-                      >
-                        <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                    {(selectedCourse.curriculum || []).map((item, i) => (
+                      <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <CheckCircle className="h-4 w-4 text-primary" />
                         {item}
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <Button variant="hero" size="lg" className="w-full" asChild>
-                  <Link href={getHref(selectedCourse.category)}>
+                <Button className="w-full" asChild>
+                  <Link href={getHref(selectedCourse.category, selectedCourse.id)}>
                     {getButtonText(selectedCourse.category)}
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </div>

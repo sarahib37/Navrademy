@@ -1,18 +1,14 @@
-// app/paystack/webhook/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { db } from "@/lib/firebaseAdmin";
+import { FieldValue } from "firebase-admin/firestore";
 
-// export const config = {
-//   runtime: "nodejs", // ensures Node runtime for Firebase Admin
-// };
-
-export const runtime = "nodejs"
+export const runtime = "nodejs" 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const rawBody = await req.text(); // get raw body
+    const rawBody = await req.text();
     const signature = req.headers.get("x-paystack-signature") || "";
 
     const hash = crypto
@@ -27,12 +23,17 @@ export async function POST(req: NextRequest) {
     const event = JSON.parse(rawBody);
 
     if (event.event === "charge.success") {
-      const { reference, amount, customer, metadata } = event.data;
+      const payment = event.data;
 
-      // 🔒 Idempotency check
+      const email = payment.customer.email;
+      const amount = payment.amount;
+      const coupon = payment.metadata?.coupon || "";
+      const courseTitle = payment.metadata?.courseTitle || "";
+      const referenceId = payment.reference;
+
       const existing = await db
         .collection("payments")
-        .where("reference", "==", reference)
+        .where("reference", "==", referenceId)
         .limit(1)
         .get();
 
@@ -40,32 +41,47 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: "Already processed" });
       }
 
-      // Save payment
+      if (coupon) {
+        const couponQuery = await db
+          .collection("coupons")
+          .where("code", "==", coupon)
+          .limit(1)
+          .get();
+      
+        if (!couponQuery.empty) {
+          const docRef = couponQuery.docs[0].ref;
+      
+          await docRef.update({
+            usage_count: FieldValue.increment(1),
+          });
+        }
+      }
+
       await db.collection("payments").add({
-        reference,
-        email: customer.email,
+        email,
         amount,
-        courseTitle: metadata.courseTitle,
-        paidAt: new Date(),
-        createdAt: new Date(),
+        coupon,
+        courseTitle,
+        reference: referenceId,
+        status: "success",
+        created_at: new Date(),
       });
 
-      // Send confirmation email
-      await fetch("https://api.brevo.com/v3/smtp/email", {
+      fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "api-key": process.env.BREVO_API_KEY!,
         },
         body: JSON.stringify({
-          sender: { email: "hello@yourdomain.com", name: "Your Academy" },
-          to: [{ email: customer.email }],
+          sender: { email: "hello@navrademy.com", name: "Navrademy" },
+          to: [{ email }],
           subject: "Payment Confirmed - Course Enrollment",
           htmlContent: `
             <h2>Payment Successful</h2>
             <p>You are successfully enrolled in:</p>
-            <strong>${metadata.courseTitle}</strong>
-            <p>Reference: ${reference}</p>
+            <strong>${courseTitle}</strong>
+            <p>Reference: ${referenceId}</p>
             <p>We will contact you with next steps.</p>
           `,
         }),
@@ -78,7 +94,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Optional: block other methods
 export async function GET() {
   return NextResponse.json({ error: "GET not allowed" }, { status: 405 });
 }

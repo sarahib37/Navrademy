@@ -33,7 +33,8 @@ export async function GET(req: NextRequest) {
       status: "success",
       email: data.data.customer.email,
       amount: data.data.amount,
-      courseTitle: data.data.metadata?.courseTitle,
+      courseTitle: data.data.metadata.courseTitle,
+      coupon: data.data.metadata.coupon
     });
 
   } catch (error) {

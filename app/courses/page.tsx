@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
@@ -8,17 +9,13 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Users, Signal, BookOpen } from "lucide-react";
 import Link from "next/link";
-import { COURSES } from "@/lib/courses";
-
-const liveCourses = COURSES.filter(c => c.category === "Live Course")
-const selfPaced = COURSES.filter(c => c.category === "Self Paced")
-const upcoming = COURSES.filter(c => c.category === "Upcoming")
+import { getCourses, groupCourses, type Course } from "@/lib/courses";
 
 const CourseCard = ({
   course,
   variant,
 }: {
-  course: typeof liveCourses[0];
+  course: Course;
   variant: "live" | "self-paced" | "upcoming";
 }) => {
   const categoryLabel =
@@ -93,6 +90,26 @@ const CourseCard = ({
 };
 
 export default function Courses() {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const data = await getCourses();
+      setCourses(data);
+      setLoading(false);
+    };
+    fetchCourses();
+  }, []);
+
+  const { live, selfPaced, upcoming } = groupCourses(courses);
+
+  const sections = [
+    { label: "Live Courses", data: live, variant: "live" as const },
+    { label: "Self-Paced Courses", data: selfPaced, variant: "self-paced" as const },
+    { label: "Upcoming Courses", data: upcoming, variant: "upcoming" as const },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -107,11 +124,7 @@ export default function Courses() {
 
       <section className="section-padding">
         <div className="container mx-auto px-4 lg:px-8">
-          {[
-            { label: "Live Courses", data: liveCourses, variant: "live" as const },
-            { label: "Self-Paced Courses", data: selfPaced, variant: "self-paced" as const },
-            { label: "Upcoming Courses", data: upcoming, variant: "upcoming" as const },
-          ].map((section) => (
+          {sections.map((section) => (
             <div key={section.label} className="mb-16">
               <div className="section-eyebrow">{section.label}</div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

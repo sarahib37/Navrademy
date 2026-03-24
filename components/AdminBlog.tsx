@@ -1,16 +1,14 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { Button } from './ui/button'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 
-type Props = {}
-
-export default function AdminBlog({}: Props) {
+export default function AdminBlog() {
   const [blogPosts, setBlogPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -20,7 +18,7 @@ export default function AdminBlog({}: Props) {
       try {
         const q = query(
           collection(db, "blogs"),
-          orderBy("createdAt", "desc") // newest first
+          orderBy("createdAt", "desc")
         );
   
         const querySnapshot = await getDocs(q);

@@ -7,6 +7,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const loadingSteps = [
   "Fetching course details...",
@@ -24,6 +26,13 @@ export default function PaymentPage() {
   const [amount, setAmount] = useState(0);
   const [authorizationUrl, setAuthorizationUrl] = useState("");
   const [error, setError] = useState("");
+  const [couponError, setCouponError] = useState("");
+
+  const [coupon, setCoupon] = useState("");
+  const [originalAmount, setOriginalAmount] = useState(0);
+  const [displayAmount, setDisplayAmount] = useState(amount);
+  const [discount, setDiscount] = useState(0);
+  const [couponStatus, setCouponStatus] = useState<"idle" | "valid" | "not_found" | "expired" | "invalid_course">("idle");
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -43,13 +52,16 @@ export default function PaymentPage() {
         const res = await fetch("/courses/api/paystack/initiate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ coupon }),
         });
 
         const data = await res.json();
 
         if (res.ok) {
           setCourseTitle(data.courseTitle);
-          setAmount(data.amount / 100);
+          setOriginalAmount(data.originalAmount / 100);
+          setAmount(data.finalAmount / 100);
+          setDiscount(data.discount / 100);
           setAuthorizationUrl(data.authorization_url);
         } else {
           setError(data.error || "Failed to initialize payment");
@@ -83,6 +95,58 @@ export default function PaymentPage() {
     finishSteps();
   }, [apiFinished, stepIndex]);
 
+  const handleApplyCoupon = async (e?: React.FormEvent) => {
+    e?.preventDefault(); // ✅ prevent reload
+  
+    try {
+      const res = await fetch("/courses/api/coupon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ coupon }),
+      });
+  
+      const data = await res.json();
+  
+      if (data.status === "valid") {
+        setOriginalAmount(data.originalAmount / 100);
+        setAmount(data.finalAmount / 100);
+        setDiscount(data.discount / 100);
+        setCouponStatus("valid");
+      } else {
+        setCouponStatus(data.status);
+        setDiscount(0);
+        setAmount((prev) => originalAmount);
+      }
+    } catch {
+      setCouponError("Failed to apply coupon");
+    }
+  };
+
+  useEffect(() => {
+    let start = displayAmount;
+    let end = amount;
+  
+    if (start === end) return;
+  
+    const duration = 300; // ms
+    const startTime = performance.now();
+  
+    const animate = (time: number) => {
+      const progress = Math.min((time - startTime) / duration, 1);
+  
+      const value = Math.floor(start + (end - start) * progress);
+      setDisplayAmount(value);
+  
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+  
+    requestAnimationFrame(animate);
+  }, [amount]);
+
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-600">
@@ -90,6 +154,32 @@ export default function PaymentPage() {
       </div>
     );
   }
+
+  const handlePayNow = async () => {
+    setLoading(true);
+  
+    try {
+      const res = await fetch("/courses/api/paystack/initiate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ coupon }), // final coupon
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        window.location.href = data.authorization_url;
+      } else {
+        setError(data.error);
+      }
+    } catch {
+      setError("Payment failed");
+    }
+  
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -197,7 +287,7 @@ export default function PaymentPage() {
                       </span>
 
                       <span className="text-2xl font-bold text-primary">
-                        ₦{amount.toLocaleString()}
+                        ₦{originalAmount.toLocaleString()}
                       </span>
                     </div>
                   </div>
@@ -210,17 +300,68 @@ export default function PaymentPage() {
                       </h3>
 
                       <div className="rounded-xl bg-muted/50 p-4 text-center">
-                        <p className="text-3xl font-heading font-bold">
-                          ₦{amount.toLocaleString()}
-                        </p>
+                      <motion.p
+                        key={amount}
+                        initial={{ scale: 0.95, opacity: 0.7 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.25 }}
+                        className="text-3xl font-heading font-bold"
+                      >
+                        ₦{displayAmount.toLocaleString()}
+                      </motion.p>
 
                         <p className="text-xs text-muted-foreground">
                           One-time payment
                         </p>
                       </div>
 
-                      <Button variant="hero" size="lg" className="w-full" asChild>
-                        <a href={authorizationUrl}>Pay Now</a>
+
+                      <div className="space-y-2">
+                        <Label>Coupon Code</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Enter coupon"
+                            value={coupon}
+                            onChange={(e) => setCoupon(e.target.value)}
+                          />
+                          <Button onClick={handleApplyCoupon}>
+                            Apply
+                          </Button>
+                        </div>
+                      </div>
+
+                      {couponStatus !== "idle" && (
+                        <div className={`text-sm ${
+                          couponStatus === "valid"
+                            ? "text-green-600"
+                            : "text-red-500"
+                        }`}>
+                          {couponStatus === "valid" && "Coupon applied successfully"}
+                          {couponStatus === "not_found" && "Coupon does not exist"}
+                          {couponStatus === "expired" && "This coupon has expired"}
+                          {couponStatus === "invalid_course" && "This coupon is not valid for this course"}
+                        </div>
+                      )}
+
+                      {discount > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: discount > 0 ? 1 : 0, y: discount > 0 ? 0 : 5 }}
+                          className="flex justify-between py-2 text-green-600"
+                        >
+                          <span>Discount</span>
+                          <span>-₦{discount.toLocaleString()}</span>
+                        </motion.div>
+                      )}
+
+                      <Button
+                        variant="hero"
+                        size="lg"
+                        className="w-full"
+                        onClick={handlePayNow}
+                        disabled={couponStatus !== "valid" && couponStatus !== "idle"}
+                      >
+                        Pay Now
                       </Button>
 
                       <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground">

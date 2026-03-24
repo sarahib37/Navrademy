@@ -20,13 +20,15 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   courseId: string;
   courseTitle: string;
+  courseAmount: number;
 }
 
 export default function EnrollEmailDialog({
   open,
   onOpenChange,
   courseId,
-  courseTitle
+  courseTitle,
+  courseAmount
 }: Props) {
 
   const [email, setEmail] = useState("");
@@ -49,7 +51,8 @@ export default function EnrollEmailDialog({
         body: JSON.stringify({
           email,
           courseId,
-          courseTitle
+          courseTitle,
+          courseAmount: courseAmount * 100
         })
       });
 

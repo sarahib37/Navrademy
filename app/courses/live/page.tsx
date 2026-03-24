@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
@@ -8,41 +8,8 @@ import CTASection from "@/components/CTASection";
 import EmailModal from "@/components/EmailModal";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Clock, Users, Signal, Layers, BookOpen, Building2 } from "lucide-react";
-import { COURSES } from "@/lib/courses";
-
-const careerPrograms = COURSES.filter(c => c.type === "career")
-const individualCourses = COURSES.filter(c => c.type === "course")
-const corporatePrograms = COURSES.filter(c => c.type === "corporate")
-
-type Course = typeof careerPrograms[0];
-
-const sections = [
-  {
-    key: "career",
-    icon: Layers,
-    label: "Career Programs",
-    eyebrow: "Skill Clusters",
-    description: "Comprehensive, multi-module programs designed to take you from beginner to job-ready in a specific career path.",
-    courses: careerPrograms,
-  },
-  {
-    key: "individual",
-    icon: BookOpen,
-    label: "Individual Courses",
-    eyebrow: "Focused Skills",
-    description: "Shorter, targeted courses to master a specific tool or skill. Perfect for upskilling fast.",
-    courses: individualCourses,
-  },
-  {
-    key: "corporate",
-    icon: Building2,
-    label: "Corporate Upskilling Programs",
-    eyebrow: "For Teams & Organizations",
-    description: "Custom training programs designed for teams. Build organizational capability at scale.",
-    courses: corporatePrograms,
-  },
-];
+import { ArrowRight, CheckCircle, Clock, Users, Layers, BookOpen, Building2, Signal } from "lucide-react";
+import { getCoursesByCategory, type Course } from "@/lib/courses";
 
 const CourseCard = ({ course, index, onApply }: { 
   course: Course; 
@@ -67,11 +34,11 @@ const CourseCard = ({ course, index, onApply }: {
     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <div>
         <h4 className="font-heading font-bold text-sm mb-3 text-primary">Who It's For</h4>
-        <ul className="space-y-2">{course.whoFor.map((item) => <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground"><CheckCircle className="h-4 w-4 text-primary mt-0.5 shrink-0" />{item}</li>)}</ul>
+        <ul className="space-y-2">{course.who_is_for.map((item) => <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground"><CheckCircle className="h-4 w-4 text-primary mt-0.5 shrink-0" />{item}</li>)}</ul>
       </div>
       <div>
         <h4 className="font-heading font-bold text-sm mb-3 text-destructive">Not For</h4>
-        <ul className="space-y-2">{course.notFor.map((item) => <li key={item} className="text-sm text-muted-foreground">• {item}</li>)}</ul>
+        <ul className="space-y-2">{course.who_is_not_for.map((item) => <li key={item} className="text-sm text-muted-foreground">• {item}</li>)}</ul>
       </div>
       <div>
         <h4 className="font-heading font-bold text-sm mb-3 text-primary">Outcomes</h4>
@@ -83,20 +50,57 @@ const CourseCard = ({ course, index, onApply }: {
       </div>
     </div>
 
-    {/* <Button variant="hero" size="lg" onClick={() => onApply(course)}>
+    <Button variant="hero" size="lg" onClick={() => onApply(course)}>
       Apply Now <ArrowRight className="h-4 w-4" />
-    </Button> */}
-
-    <Button variant="hero" size="lg">
-      <a href="/waitlist">
-        Apply Now <ArrowRight className="h-4 w-4" />
-      </a>
     </Button>
   </motion.div>
 );
 
 const LiveCourses = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [liveCourses, setLiveCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getCoursesByCategory("self-paced");
+      setLiveCourses(data);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  const careerPrograms = liveCourses.filter(c => c.type === "career")
+  const individualCourses = liveCourses.filter(c => c.type === "individual")
+  const corporatePrograms = liveCourses.filter(c => c.type === "corporate")
+
+  const sections = [
+    {
+      key: "career",
+      icon: Layers,
+      label: "Career Programs",
+      eyebrow: "Skill Clusters",
+      description: "Comprehensive, multi-module programs designed to take you from beginner to job-ready in a specific career path.",
+      courses: careerPrograms,
+    },
+    {
+      key: "individual",
+      icon: BookOpen,
+      label: "Individual Courses",
+      eyebrow: "Focused Skills",
+      description: "Shorter, targeted courses to master a specific tool or skill. Perfect for upskilling fast.",
+      courses: individualCourses,
+    },
+    {
+      key: "corporate",
+      icon: Building2,
+      label: "Corporate Upskilling Programs",
+      eyebrow: "For Teams & Organizations",
+      description: "Custom training programs designed for teams. Build organizational capability at scale.",
+      courses: corporatePrograms,
+    },
+  ].filter(section => section.courses.length > 0); ;
 
   const handleApply = (course: Course) => {
     setSelectedCourse(course);
@@ -114,8 +118,28 @@ const LiveCourses = () => {
         subtitle="Real-time interaction, projects, and mentorship with industry professionals."
       />
 
-      {sections.map((section) => (
-        <section key={section.key} className="section-padding">
+      {loading ? (
+        <div className="text-center py-16 text-muted-foreground">
+          Loading courses...
+        </div>
+      ) : liveCourses.length === 0 ? (
+        <div className="section-padding text-center">
+          <h2 className="text-2xl font-heading font-bold mb-3">
+            No Live Courses Available Yet
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            We're preparing live programs for you. Join the waitlist to be notified.
+          </p>
+      
+          <Button asChild>
+            <a href="/waitlist">
+              Join Waitlist <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+          </Button>
+        </div>
+      ) : (
+        sections.map((section) => (
+          <section key={section.key} className="section-padding">
           <div className="container mx-auto px-4 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -138,7 +162,8 @@ const LiveCourses = () => {
             </div>
           </div>
         </section>
-      ))}
+        ))
+      )}
 
       <EmailModal
         open={!!selectedCourse}
@@ -147,6 +172,7 @@ const LiveCourses = () => {
         }}
         courseId={selectedCourse?.id ?? ""}
         courseTitle={selectedCourse?.title ?? ""}
+        courseAmount={selectedCourse?.price ?? 0}
       />
       <CTASection />
       <Footer />

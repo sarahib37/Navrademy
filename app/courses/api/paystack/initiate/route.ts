@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/firebaseAdmin";
-import { COURSE_PRICES } from "@/lib/courses";
 import { cookies } from "next/headers";
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
+    const { coupon } = await req.json();
+
     const cookieStore = await cookies();
     const token = cookieStore.get("payment_session")?.value;
 
@@ -24,14 +25,51 @@ export async function POST() {
     }
 
     const data = snapshot.docs[0].data();
-    console.log(data)
 
-    const price = COURSE_PRICES[data.courseId];
+    let courseTitle = data.courseTitle;
+    let originalAmount = data.courseAmount; 
+    let finalAmount = originalAmount;
+    let discount = 0;
 
-    if (!price) {
-      return NextResponse.json({ error: "Invalid course" }, { status: 400 });
+    // ✅ APPLY COUPON
+    if (coupon) {
+      const couponQuery = await db
+        .collection("coupons")
+        .where("code", "==", coupon.toUpperCase())
+        .where("is_active", "==", true)
+        .limit(1)
+        .get();
+
+      if (!couponQuery.empty) {
+        const couponData = couponQuery.docs[0].data();
+
+        const isExpired =
+          couponData.usage_count >= couponData.usage_limit;
+
+        const validForCourse =
+          !couponData.course_id ||
+          couponData.course_id === data.courseId;
+
+        if (!isExpired && validForCourse) {
+          if (couponData.discount_type === "percentage") {
+            discount =
+              (originalAmount * couponData.discount_value) / 100;
+          } else {
+            discount = couponData.discount_value * 100;
+          }
+
+          finalAmount = Math.max(originalAmount - discount, 0);
+        }
+
+
+      } else {
+        return NextResponse.json({
+          error: "Invalid coupon code",
+        }, { status: 400 });
+      }
     }
 
+    // ✅ PAYSTACK INIT
     const paystackRes = await fetch(
       "https://api.paystack.co/transaction/initialize",
       {
@@ -42,10 +80,13 @@ export async function POST() {
         },
         body: JSON.stringify({
           email: data.email,
-          amount: price,
-          courseTitle: data.courseTitle,
+          amount: finalAmount,
           metadata: {
             token,
+            courseTitle,
+            coupon: coupon || null,
+            originalAmount,
+            discount,
           },
           callback_url: `${process.env.NEXT_PUBLIC_BASE_URL}/courses/payment-success`,
         }),
@@ -56,7 +97,9 @@ export async function POST() {
 
     return NextResponse.json({
       courseTitle: data.courseTitle,
-      amount: price,
+      originalAmount,
+      finalAmount,
+      discount,
       authorization_url: paystackData.data.authorization_url,
     });
   } catch (error) {
