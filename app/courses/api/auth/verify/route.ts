@@ -1,6 +1,8 @@
 import { db } from "@/lib/firebaseAdmin";
 import { cookies } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const { token } = await req.json();
 
