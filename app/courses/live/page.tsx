@@ -63,7 +63,7 @@ const LiveCourses = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getCoursesByCategory("self-paced");
+      const data = await getCoursesByCategory("live");
       setLiveCourses(data);
       setLoading(false);
     };
