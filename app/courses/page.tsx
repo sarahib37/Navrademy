@@ -11,6 +11,11 @@ import { ArrowRight, Clock, Users, Signal, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { getCourses, groupCourses, type Course } from "@/lib/courses";
 
+export const metadata = {
+  title: "Navrademy Courses | Learn Practical Skills Online",
+  description: "Explore Navrademy courses designed to teach practical skills, industry knowledge, and career-ready training for students, creators, and professionals.",
+};
+
 const CourseCard = ({
   course,
   variant,

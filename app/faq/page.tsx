@@ -12,6 +12,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+export const metadata = {
+  title: "Navrademy FAQs | Answers to Your Questions",
+  description: "Find answers to common questions about Navrademy courses, mentorship programs, events, community membership, and learning opportunities.",
+};
+
 const faqSections = [
   {
     title: "About Navrademy",

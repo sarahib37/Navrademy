@@ -6,6 +6,11 @@ import CTASection from "@/components/CTASection";
 import { motion } from "framer-motion";
 import { Building2, Target, Eye, Heart, Sparkles } from "lucide-react";
 
+export const metadata = {
+  title: "About Navrademy | Our Mission, Vision & Impact",
+  description: "Learn about Navrademy’s mission to empower individuals through skills training, mentorship, community learning, and career development opportunities.",
+};
+
 const values = [
   { icon: Target, title: "Clarity Over Hype", description: "We cut through noise to give you clear, actionable direction." },
   { icon: Heart, title: "Outcomes Over Promises", description: "Everything we build is measured by real results, not vanity metrics." },

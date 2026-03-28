@@ -6,6 +6,11 @@ import CTASection from "@/components/CTASection";
 import { motion } from "framer-motion";
 import { Users, BookOpen, Shield, MessageCircle } from "lucide-react";
 
+export const metadata = {
+  title: "Navrademy Community | Network, Learn & Collaborate",
+  description: "Join the Navrademy community to connect with ambitious learners, share ideas, collaborate on projects, and grow together.",
+};
+
 const pillars = [
   { icon: Users, title: "Student Communities", description: "Join cohort-based groups where you learn, share, and grow alongside peers on the same journey." },
   { icon: MessageCircle, title: "Peer Learning", description: "Structured group discussions, study sessions, and collaborative projects that deepen understanding." },

@@ -3,8 +3,11 @@ import Providers from "./providers";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Navrademy",
-  description: "Navrademy platform",
+  title: {
+    default: "Navrademy",
+    template: "%s | Navrademy",
+  },
+  description: "Learn digital skills and start earning online.",
 };
 
 export default function RootLayout({

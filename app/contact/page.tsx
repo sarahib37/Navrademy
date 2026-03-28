@@ -9,6 +9,11 @@ import { Mail, MessageSquare, Handshake, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
+export const metadata = {
+  title: "Contact Navrademy | Get in Touch Today",
+  description: "Have questions about courses, mentorship, or events? Contact Navrademy today and our team will help you get started.",
+};
+
 const contactTypes = [
   { icon: MessageSquare, title: "General Inquiries", description: "Questions about courses, pricing, or how Navrademy works.", email: "hello@navrademy.com" },
   { icon: Handshake, title: "Partnerships", description: "Corporate training, sponsorships, or collaboration opportunities.", email: "partners@navrademy.com" },

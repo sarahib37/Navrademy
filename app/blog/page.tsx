@@ -11,6 +11,11 @@ import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+export const metadata = {
+  title: "Navrademy Blog | Insights on Skills & Growth",
+  description: "Read the Navrademy blog for insights on career growth, skills development, entrepreneurship, mentorship, and success strategies.",
+};
+
 // const categories = ["All", "Career Reality Checks", "Skill Trends", "Future of Work", "Learning Insights"];
 
 const Blogs = () => {

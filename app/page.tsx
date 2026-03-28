@@ -11,6 +11,11 @@ import CTASection from "@/components/CTASection";
 import FAQPreviewSection from "@/components/FAQPreviewSection";
 import Footer from "@/components/Footer";
 
+export const metadata = {
+  title: "Navrademy | Skills, Mentorship & Career Growth Hub",
+  description: "Navrademy helps individuals grow through courses, mentorship, events, and a thriving learning community. Build real skills and unlock career opportunities.",
+};
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">

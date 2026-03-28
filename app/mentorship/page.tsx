@@ -7,6 +7,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, User, Users, Compass } from "lucide-react";
 
+export const metadata = {
+  title: "Navrademy Mentorship | Learn from Industry Experts",
+  description: "Connect with experienced mentors at Navrademy and gain guidance, career advice, and practical insights to accelerate your personal growth.",
+};
+
 const programs = [
   {
     icon: User,

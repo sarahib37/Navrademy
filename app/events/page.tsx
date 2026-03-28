@@ -7,6 +7,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Calendar, Monitor } from "lucide-react";
 
+export const metadata = {
+  title: "Navrademy Events | Workshops, Trainings & Meetups",
+  description: "Discover Navrademy events including workshops, masterclasses, networking sessions, and trainings designed to help you grow professionally.",
+};
+
 const events = [
   { title: "Digital Marketing Workshop", type: "Workshop", date: "March 15, 2026", format: "Virtual", description: "Hands-on session on running your first ad campaign from scratch." },
   { title: "UX Design Sprint", type: "Bootcamp", date: "March 22-23, 2026", format: "Virtual", description: "Weekend intensive on rapid prototyping and user testing." },

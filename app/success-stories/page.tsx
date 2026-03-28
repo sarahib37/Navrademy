@@ -6,6 +6,11 @@ import CTASection from "@/components/CTASection";
 import { motion } from "framer-motion";
 import { Star, Trophy } from "lucide-react";
 
+export const metadata = {
+  title: "Navrademy Success Stories | Student Achievements",
+  description: "Read inspiring success stories from Navrademy learners who transformed their careers, built skills, and achieved their goals.",
+};
+
 const stories = [
   {
     name: "Adaeze Okafor",
