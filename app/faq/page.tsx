@@ -1,9 +1,7 @@
-"use client"
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
-import { motion } from "framer-motion";
 import { HelpCircle } from "lucide-react";
 import {
   Accordion,
@@ -11,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { AnimatedWrapper } from "@/components/AnimatedWrapper";
 
 export const metadata = {
   title: "Navrademy FAQs | Answers to Your Questions",
@@ -142,36 +141,32 @@ const FAQ = () => {
       <section className="section-padding">
         <div className="container mx-auto px-4 lg:px-8 max-w-3xl">
           {faqSections.map((section, sIdx) => (
-            <motion.div
-              key={section.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: sIdx * 0.08 }}
-              className="mb-14 last:mb-0"
-            >
-              <div className="section-eyebrow">{section.title}</div>
-              <h2 className="text-2xl md:text-3xl font-heading font-bold mb-6">
-                {section.title}
-              </h2>
+            <AnimatedWrapper>
+              <div key={section.title}>
+                <div className="section-eyebrow">{section.title}</div>
+                <h2 className="text-2xl md:text-3xl font-heading font-bold mb-6">
+                  {section.title}
+                </h2>
 
-              <Accordion type="single" collapsible className="space-y-3">
-                {section.items.map((item, i) => (
-                  <AccordionItem
-                    key={i}
-                    value={`${sIdx}-${i}`}
-                    className="elevated-card border-none px-6 rounded-xl"
-                  >
-                    <AccordionTrigger className="text-left font-medium text-[15px] hover:no-underline py-5">
-                      {item.q}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
-                      {item.a}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </motion.div>
+                <Accordion type="single" collapsible className="space-y-3">
+                  {section.items.map((item, i) => (
+                    <AccordionItem
+                      key={i}
+                      value={`${sIdx}-${i}`}
+                      className="elevated-card border-none px-6 rounded-xl"
+                    >
+                      <AccordionTrigger className="text-left font-medium text-[15px] hover:no-underline py-5">
+                        {item.q}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
+                        {item.a}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+            </AnimatedWrapper>
+            
           ))}
         </div>
       </section>

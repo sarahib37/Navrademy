@@ -1,10 +1,9 @@
-"use client"
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
-import { motion } from "framer-motion";
 import { Star, Trophy } from "lucide-react";
+import { AnimatedWrapper } from "@/components/AnimatedWrapper";
 
 export const metadata = {
   title: "Navrademy Success Stories | Student Achievements",
@@ -58,20 +57,23 @@ const SuccessStories = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid md:grid-cols-2 gap-8">
             {stories.map((s, i) => (
-              <motion.div key={s.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="accent-card p-8">
-                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/20 text-primary mb-4 inline-block">{s.type}</span>
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, j) => <Star key={j} className="h-4 w-4 fill-primary text-primary" />)}
-                </div>
-                <p className="text-foreground/90 leading-relaxed italic mb-6">"{s.story}"</p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-heading font-bold">{s.name}</p>
-                    <p className="text-sm text-muted-foreground">{s.role}</p>
+              <AnimatedWrapper>
+                <div key={s.name}>
+                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/20 text-primary mb-4 inline-block">{s.type}</span>
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(5)].map((_, j) => <Star key={j} className="h-4 w-4 fill-primary text-primary" />)}
                   </div>
-                  <span className="text-xs text-primary font-medium max-w-[160px] text-right">{s.outcome}</span>
+                  <p className="text-foreground/90 leading-relaxed italic mb-6">"{s.story}"</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-heading font-bold">{s.name}</p>
+                      <p className="text-sm text-muted-foreground">{s.role}</p>
+                    </div>
+                    <span className="text-xs text-primary font-medium max-w-[160px] text-right">{s.outcome}</span>
+                  </div>
                 </div>
-              </motion.div>
+              </AnimatedWrapper>
+              
             ))}
           </div>
         </div>

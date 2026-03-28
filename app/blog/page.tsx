@@ -1,15 +1,14 @@
-"use client"
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
-import { motion } from "framer-motion";
 import { BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { AnimatedWrapper } from "@/components/AnimatedWrapper";
 
 export const metadata = {
   title: "Navrademy Blog | Insights on Skills & Growth",
@@ -84,29 +83,30 @@ const Blogs = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {publishedBlogs.map((post, i) => (
-                <motion.article key={post.id}
-                onClick={() => router.push(`/blog/${post.slug}`)}
-                className="elevated-card overflow-hidden group cursor-pointer" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-                  <div className="h-40 gradient-bg-soft relative">
-                    {post.featuredImage && (
-                      <Image
-                        src={post.featuredImage}
-                        alt={post.title}
-                        fill
-                        className="object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <span className="text-xs text-primary font-medium">{post.category}</span>
-                    <h3 className="text-lg font-heading font-bold mt-2 mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{post.excerpt}</p>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      {/* <span>{post.date}</span>
-                      <span>{post.readTime} read</span> */}
+                <AnimatedWrapper>
+                  <article key={post.id} onClick={() => router.push(`/blog/${post.slug}`)}>
+                    <div className="h-40 gradient-bg-soft relative">
+                      {post.featuredImage && (
+                        <Image
+                          src={post.featuredImage}
+                          alt={post.title}
+                          fill
+                          className="object-cover"
+                        />
+                      )}
                     </div>
-                  </div>
-                </motion.article>
+                    <div className="p-6">
+                      <span className="text-xs text-primary font-medium">{post.category}</span>
+                      <h3 className="text-lg font-heading font-bold mt-2 mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-4">{post.excerpt}</p>
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        {/* <span>{post.date}</span>
+                        <span>{post.readTime} read</span> */}
+                      </div>
+                    </div>
+                  </article>
+                </AnimatedWrapper>
+                
               ))}
             </div>
           </div>

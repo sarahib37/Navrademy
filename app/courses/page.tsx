@@ -1,15 +1,13 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Users, Signal, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { getCourses, groupCourses, type Course } from "@/lib/courses";
+import { AnimatedWrapper } from "@/components/AnimatedWrapper";
 
 export const metadata = {
   title: "Navrademy Courses | Learn Practical Skills Online",
@@ -135,15 +133,12 @@ export default function Courses() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {section.data.length > 0 ? (
                 section.data.map((c, i) => (
-                  <motion.div
-                    key={c.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
-                  >
-                    <CourseCard course={c} variant={section.variant} />
-                  </motion.div>
+                  <AnimatedWrapper>
+                    <div key={c.title}>
+                      <CourseCard course={c} variant={section.variant} />
+                    </div>
+                  </AnimatedWrapper>
+                  
                 ))
               ) : (
                 <div className="col-span-full accent-card p-8 text-center">

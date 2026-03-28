@@ -1,10 +1,9 @@
-"use client"
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
-import { motion } from "framer-motion";
 import { Users, BookOpen, Shield, MessageCircle } from "lucide-react";
+import { AnimatedWrapper } from "@/components/AnimatedWrapper";
 
 export const metadata = {
   title: "Navrademy Community | Network, Learn & Collaborate",
@@ -34,13 +33,16 @@ const Community = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {pillars.map((p, i) => (
-              <motion.div key={p.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="elevated-card p-8 group">
-                <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6 group-hover:glow-coral-sm transition-all">
-                  <p.icon className="h-7 w-7 text-primary-foreground" />
+              <AnimatedWrapper>
+                <div key={p.title}>
+                  <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center mb-6 group-hover:glow-coral-sm transition-all">
+                    <p.icon className="h-7 w-7 text-primary-foreground" />
+                  </div>
+                  <h3 className="text-xl font-heading font-bold mb-3">{p.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{p.description}</p>
                 </div>
-                <h3 className="text-xl font-heading font-bold mb-3">{p.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{p.description}</p>
-              </motion.div>
+              </AnimatedWrapper>
+              
             ))}
           </div>
         </div>

@@ -1,9 +1,8 @@
-"use client"
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTASection from "@/components/CTASection";
-import { motion } from "framer-motion";
+import { AnimatedWrapper } from "@/components/AnimatedWrapper";
 import { Building2, Target, Eye, Heart, Sparkles } from "lucide-react";
 
 export const metadata = {
@@ -32,7 +31,7 @@ const About = () => {
 
       <section className="section-padding">
         <div className="container mx-auto px-4 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start mb-24">
+          <AnimatedWrapper>
             <div className="accent-card p-8 lg:p-10">
               <div className="section-eyebrow">The Challenge</div>
               <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4">The Problem We Solve</h2>
@@ -53,9 +52,9 @@ const About = () => {
                 This means our courses aren't academic exercises — they're distilled from real campaigns, real clients, and real results. When we teach digital marketing, we teach from the trenches.
               </p>
             </div>
-          </motion.div>
+          </AnimatedWrapper>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-24">
+          <AnimatedWrapper>
             <div className="text-center mb-12">
               <div className="section-eyebrow justify-center">What we stand for</div>
               <h2 className="text-3xl md:text-4xl font-heading font-bold">
@@ -64,18 +63,21 @@ const About = () => {
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {values.map((v, i) => (
-                <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="elevated-card p-6 group">
-                  <div className="w-12 h-12 rounded-lg gradient-bg flex items-center justify-center mb-4 group-hover:glow-coral-sm transition-all">
-                    <v.icon className="h-6 w-6 text-primary-foreground" />
+                <AnimatedWrapper>
+                  <div key={v.title} className="elevated-card p-6 group">
+                    <div className="w-12 h-12 rounded-lg gradient-bg flex items-center justify-center mb-4 group-hover:glow-coral-sm transition-all">
+                      <v.icon className="h-6 w-6 text-primary-foreground" />
+                    </div>
+                    <h3 className="font-heading font-bold mb-2">{v.title}</h3>
+                    <p className="text-sm text-muted-foreground">{v.description}</p>
                   </div>
-                  <h3 className="font-heading font-bold mb-2">{v.title}</h3>
-                  <p className="text-sm text-muted-foreground">{v.description}</p>
-                </motion.div>
+                </AnimatedWrapper>
+                
               ))}
             </div>
-          </motion.div>
+          </AnimatedWrapper>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative rounded-2xl overflow-hidden dark-section p-8 lg:p-12 text-center max-w-3xl mx-auto">
+          <AnimatedWrapper >
             <div className="absolute inset-0 pattern-overlay pointer-events-none" />
             <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-primary/[0.06] blur-[100px] pointer-events-none" />
             <div className="relative">
@@ -86,7 +88,7 @@ const About = () => {
               </blockquote>
               <p className="font-heading font-bold text-primary">Founder, Navrademy & Navra Consult</p>
             </div>
-          </motion.div>
+          </AnimatedWrapper>
         </div>
       </section>
 
