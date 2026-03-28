@@ -217,7 +217,7 @@ export default function CoursesSection() {
                 </div>
 
                 <Button className="w-full" asChild>
-                  <Link href={getHref(selectedCourse.category, selectedCourse.id)}>
+                  <Link href={"/courses"}>
                     {getButtonText(selectedCourse.category)}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

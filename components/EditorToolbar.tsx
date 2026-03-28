@@ -1,9 +1,9 @@
 "use client";
 
-// import { Editor } from "@tiptap/react";
 import {
   Bold,
   Italic,
+  Image as ImageIcon,
   Underline as UnderlineIcon,
   Strikethrough,
   Heading1,
@@ -21,7 +21,7 @@ import {
   Link as LinkIcon,
   Minus,
 } from "lucide-react";
-
+import { uploadImageToImgBB } from "@/lib/imgbb";
 import { Toggle } from "@/components/ui/toggle";
 import { Separator } from "./ui/seperator";
 
@@ -51,6 +51,29 @@ export const EditorToolbar = ({ editor }: Props) => {
     if (url) {
       editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
     }
+  };
+
+  const addImage = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+  
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+  
+      try {
+        // ✅ Use your lib function directly
+        const { url } = await uploadImageToImgBB(file);
+  
+        editor.chain().focus().setImage({ src: url }).run();
+  
+      } catch (err) {
+        console.error("Image upload failed", err);
+      }
+    };
+  
+    input.click();
   };
 
   return (
@@ -125,6 +148,10 @@ export const EditorToolbar = ({ editor }: Props) => {
 
       <Btn onClick={() => editor.chain().focus().setHorizontalRule().run()} title="HR">
         <Minus className="w-4 h-4" />
+      </Btn>
+
+      <Btn onClick={addImage} title="Insert Image">
+        <ImageIcon className="w-4 h-4" />
       </Btn>
 
       <Separator orientation="vertical" className="mx-1 h-6" />

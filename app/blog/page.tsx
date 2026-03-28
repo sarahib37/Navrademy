@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 // const categories = ["All", "Career Reality Checks", "Skill Trends", "Future of Work", "Learning Insights"];
 
@@ -82,7 +83,14 @@ const Blogs = () => {
                 onClick={() => router.push(`/blog/${post.slug}`)}
                 className="elevated-card overflow-hidden group cursor-pointer" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
                   <div className="h-40 gradient-bg-soft relative">
-                    <div className="absolute inset-0 pattern-dots" />
+                    {post.featuredImage && (
+                      <Image
+                        src={post.featuredImage}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
                   </div>
                   <div className="p-6">
                     <span className="text-xs text-primary font-medium">{post.category}</span>

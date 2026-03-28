@@ -4,9 +4,12 @@ import { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
-// import TextAlign from "@tiptap/extension-text-align";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
+import Image from "@tiptap/extension-image";
 
 import {EditorToolbar} from "./EditorToolbar";
 
@@ -22,10 +25,20 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
       }),
+
+      Image.configure({
+        inline: false,
+        allowBase64: true,
+        HTMLAttributes: {
+          class: "rounded-md max-w-full",
+        },
+      }),
+
+      BulletList,
+      OrderedList,
+      ListItem,
+
       Underline,
-      // TextAlign.configure({
-      //   types: ["heading", "paragraph"],
-      // }),
       Placeholder.configure({
         placeholder: "Start writing your blog post...",
       }),
@@ -35,6 +48,7 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
     ],
     content,
     onUpdate: ({ editor } : any) => {
+      console.log(editor.getHTML());
       onChange(editor.getHTML());
     },
     editorProps: {

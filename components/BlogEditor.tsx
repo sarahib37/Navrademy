@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useRouter, useSearchParams } from "next/navigation";
+import { uploadImageToImgBB, deleteImageFromImgBB } from "@/lib/imgbb";
 
 export const BlogEditor = () => {
   const [title, setTitle] = useState("");
@@ -23,6 +24,10 @@ export const BlogEditor = () => {
   const [slug, setSlug] = useState(""); 
   const router = useRouter()
   const searchParams = useSearchParams();
+  const [file, setFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [deleteUrl, setDeleteUrl] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const mode = searchParams.get("mode"); // "create" or "edit"
   const id = searchParams.get("id");
@@ -45,6 +50,8 @@ export const BlogEditor = () => {
             setContent(data.content || "");
             setIsDraft(data.draft || false);
             setSlug(data.slug || "");
+            setImagePreview(data.featuredImage || "");
+            setDeleteUrl(data.deleteUrl || "");
           }
         } catch (error) {
           console.error("Error fetching blog:", error);
@@ -96,21 +103,39 @@ export const BlogEditor = () => {
   };
 
   const handleSaveBlog = async () => {
-    setLoading(true)
-    if (!title || !category || !excerpt || !metaDescription){
-      setLoading(false)
+    setLoading(true);
+    setError("");
+  
+    if (!title || !category || !excerpt || !metaDescription) {
+      setLoading(false);
       return;
-    };
-
+    }
+  
     try {
       const slugExists = await isSlugTaken(slug);
-
-      if(slugExists){
-        setError("Slug already exists. Please change the title.")
-        setLoading(false)
+  
+      if (slugExists) {
+        setError("Slug already exists. Please change the title.");
+        setLoading(false);
         return;
       }
-      
+  
+      let imageUrl = imagePreview;
+      let imageDeleteUrl = deleteUrl;
+  
+      if (file) {
+        setUploadingImage(true);
+
+        await deleteImageFromImgBB(deleteUrl);
+
+        const uploaded = await uploadImageToImgBB(file);
+
+        imageUrl = uploaded.url;
+        imageDeleteUrl = uploaded.deleteUrl;
+
+        setUploadingImage(false);
+      }
+  
       const blogData = {
         title,
         metaTitle,
@@ -120,25 +145,27 @@ export const BlogEditor = () => {
         category,
         content,
         draft: isDraft,
+        featuredImage: imageUrl,
+        deleteUrl: imageDeleteUrl,
         updatedAt: serverTimestamp(),
       };
   
       if (mode === "edit" && id) {
-        // ✅ UPDATE
         await updateDoc(doc(db, "blogs", id), blogData);
-        console.log("Blog updated");
       } else {
-        // ✅ CREATE
         await addDoc(collection(db, "blogs"), {
           ...blogData,
           createdAt: serverTimestamp(),
         });
-        console.log("Blog created");
       }
   
       router.push("/admin/dashboard?tab=blog");
+  
     } catch (error) {
       console.error("Error saving blog:", error);
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -146,7 +173,13 @@ export const BlogEditor = () => {
     <div className="space-y-6">
       <div className="flex justify-end">
         <Button onClick={handleSaveBlog}>
-          {mode === "edit" ? "Update Blog" : loading ? "Loading..." : isDraft ? "Save Draft" : "Publish Blog"}
+        {loading
+          ? "Loading..."
+          : mode === "edit"
+          ? "Update Blog"
+          : isDraft
+          ? "Save Draft"
+          : "Publish Blog"}
         </Button>
       </div>
 
@@ -184,6 +217,47 @@ export const BlogEditor = () => {
         <div>
           <Label>Meta Description</Label>
           <Textarea value={metaDescription}  required onChange={(e) => setMetaDescription(e.target.value)} />
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <Label>Featured Image</Label>
+
+        {imagePreview && (
+          <img
+            src={imagePreview}
+            alt="Preview"
+            className="w-full max-w-xs h-40 object-cover rounded-lg border"
+          />
+        )}
+
+        <div className="flex items-center gap-3">
+          <Input
+            type="file"
+            className="cursor-pointer"
+            accept="image/*"
+            onChange={(e) => {
+              const selected = e.target.files?.[0];
+              if (!selected) return;
+
+              setFile(selected);
+              setImagePreview(URL.createObjectURL(selected));
+            }}
+          />
+
+          {imagePreview && (
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => {
+                setFile(null);
+                setImagePreview("");
+                setDeleteUrl("");
+              }}
+            >
+              Remove
+            </Button>
+          )}
         </div>
       </div>
 
