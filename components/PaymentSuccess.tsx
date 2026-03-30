@@ -1,4 +1,3 @@
-// app/courses/payment-success/PaymentSuccessClient.tsx
 "use client";
 
 import { useEffect, useState } from "react";
