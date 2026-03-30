@@ -15,17 +15,24 @@ export type Course = {
   who_is_not_for: string[];
   outcomes: string[];
   curriculum: string[];
+  created_at?: string | null;
 };
 
 export async function getCourses(): Promise<Course[]> {
   const q = query(collection(db, "courses"), orderBy("created_at", "desc"));
   const snapshot = await getDocs(q);
 
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Course[];
+  return snapshot.docs.map((doc) => {
+    const data = doc.data();
+
+    return {
+      id: doc.id,
+      ...data,
+      created_at: data.created_at?.toDate().toISOString() ?? null,
+    };
+  }) as Course[];
 }
+
 
 export const filterLiveCourses = (courses: Course[]) =>
   courses.filter((c) => c.category === "live");

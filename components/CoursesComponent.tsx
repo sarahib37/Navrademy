@@ -1,0 +1,155 @@
+"use client"
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
+import CTASection from "@/components/CTASection";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Clock, Users, Signal, BookOpen } from "lucide-react";
+import Link from "next/link";
+import type { Course } from "@/lib/courses";
+import { motion } from "framer-motion";
+
+type Props = {
+    live: Course[];
+    selfPaced: Course[];
+    upcoming: Course[];
+}
+
+const CourseCard = ({
+    course,
+    variant,
+  }: {
+    course: Course;
+    variant: "live" | "self-paced" | "upcoming";
+  }) => {
+    const categoryLabel =
+      variant === "live"
+        ? "Live Course"
+        : variant === "self-paced"
+        ? "Self-Paced"
+        : "Upcoming";
+  
+    const categoryClass =
+      variant === "live"
+        ? "bg-primary/20 text-primary"
+        : variant === "self-paced"
+        ? "bg-accent/20 text-accent"
+        : "bg-muted text-muted-foreground";
+  
+    const href =
+      variant === "upcoming"
+        ? "/waitlist"
+        : variant === "live"
+        ? "/courses/live"
+        : "/courses/self-paced";
+  
+    const buttonText =
+      variant === "upcoming"
+        ? "Join Waitlist"
+        : variant === "live"
+        ? "Apply Now"
+        : "Enroll Now";
+  
+    return (
+      <div className="accent-card p-6 flex flex-col">
+        <span
+          className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryClass} mb-4 inline-block self-start`}
+        >
+          {categoryLabel}
+        </span>
+  
+        <h3 className="text-xl font-heading font-bold mb-2 group-hover:text-primary transition-colors">
+          {course.title}
+        </h3>
+  
+        <p className="text-sm text-muted-foreground mb-5 leading-relaxed flex-1">
+          {course.description}
+        </p>
+  
+        <div className="flex items-center gap-4 text-xs text-muted-foreground mb-6">
+          <span className="flex items-center gap-1">
+            <Clock className="h-3.5 w-3.5" />
+            {course.duration}
+          </span>
+          <span className="flex items-center gap-1">
+            <Users className="h-3.5 w-3.5" />
+            {course.students}
+          </span>
+          <span className="flex items-center gap-1">
+            <Signal className="h-3.5 w-3.5" />
+            {course.level}
+          </span>
+        </div>
+  
+        <Button
+          variant={variant === "upcoming" ? "heroOutline" : "hero"}
+          size="default"
+          className="w-full"
+          asChild
+        >
+          <Link href={href}>{buttonText}</Link>
+        </Button>
+      </div>
+    );
+};
+
+export default function CoursesComponent({live, selfPaced, upcoming}: Props) {
+    const sections = [
+        { label: "Live Courses", data: live, variant: "live" as const },
+        { label: "Self-Paced Courses", data: selfPaced, variant: "self-paced" as const },
+        { label: "Upcoming Courses", data: upcoming, variant: "upcoming" as const },
+    ];
+
+    return (
+        <div className="min-h-screen bg-background">
+            <Navbar />
+            <PageHero
+            icon={BookOpen}
+            eyebrow="Career-focused programs"
+            title="All"
+            titleAccent="Courses"
+            subtitle="Practical, career-focused programs designed by industry professionals."
+            />
+    
+            <section className="section-padding">
+            <div className="container mx-auto px-4 lg:px-8">
+                {sections.map((section) => (
+                <div key={section.label} className="mb-16">
+                    <div className="section-eyebrow">{section.label}</div>
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {section.data.length > 0 ? (
+                        section.data.map((c, i) => (
+                        <motion.div key={c.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+                            <CourseCard course={c} variant={section.variant} />
+                        </motion.div>
+                        ))
+                    ) : (
+                        <div className="col-span-full accent-card p-8 text-center">
+                            <h3 className="text-xl font-heading font-bold mb-3">
+                                No {section.label} Available Yet
+                            </h3>
+
+                            <p className="text-sm text-muted-foreground mb-6">
+                                We're preparing new {section.label.toLowerCase()}. Join the waitlist to
+                                be notified when they launch.
+                            </p>
+
+                            <Button variant="hero" asChild>
+                                <Link href="/waitlist">
+                                Join Waitlist <ArrowRight className="h-4 w-4 ml-2" />
+                                </Link>
+                            </Button>
+                        </div>
+                    )}
+                    </div>
+                </div>
+                ))}
+            </div>
+            </section>
+    
+            <CTASection />
+            <Footer />
+        </div>
+    )
+}

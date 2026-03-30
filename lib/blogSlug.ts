@@ -1,4 +1,5 @@
 import { db } from "./firebaseAdmin";
+import { Timestamp } from "firebase-admin/firestore";
 
 export type Blog = {
     id: string;
@@ -11,8 +12,29 @@ export type Blog = {
     metaDescription?: string;
     featuredImage?: string;
     draft?: boolean;
-    createdAt?: any;
-    updatedAt?: any;
+    createdAt?: Timestamp;
+    updatedAt?: Timestamp;
+};
+
+export const getBlogs = async (): Promise<Blog[]> => {
+  try {
+    const snapshot = await db
+      .collection("blogs")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    return snapshot.docs.map((doc) => {
+      const data = doc.data() as Omit<Blog, "id">;
+
+      return {
+        id: doc.id,
+        ...data,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return [];
+  }
 };
 
 export const getBlogBySlug = async (slug: string): Promise<Blog | null> => {
