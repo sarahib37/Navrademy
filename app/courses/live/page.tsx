@@ -76,14 +76,14 @@ const LiveCourses = () => {
   const corporatePrograms = liveCourses.filter(c => c.type === "corporate")
 
   const sections = [
-    // {
-    //   key: "career",
-    //   icon: Layers,
-    //   label: "Career Programs",
-    //   eyebrow: "Skill Clusters",
-    //   description: "Comprehensive, multi-module programs designed to take you from beginner to job-ready in a specific career path.",
-    //   courses: careerPrograms,
-    // },
+    {
+      key: "career",
+      icon: Layers,
+      label: "Career Programs",
+      eyebrow: "Skill Clusters",
+      description: "Comprehensive, multi-module programs designed to take you from beginner to job-ready in a specific career path.",
+      courses: careerPrograms,
+    },
     {
       key: "individual",
       icon: BookOpen,
