@@ -2,7 +2,7 @@
 
 import { FaWhatsapp } from "react-icons/fa";
 
-const WHATSAPP_NUMBER = "2348012345678"; // 👈 replace with your number (no +, no spaces)
+const WHATSAPP_NUMBER = "2349032900184";
 
 export const WhatsAppButton = () => {
   const message = encodeURIComponent("Hi, I need support");
