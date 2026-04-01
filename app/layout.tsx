@@ -1,6 +1,7 @@
 import "./globals.css";
 import Providers from "./providers";
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: "Navrademy",
@@ -16,6 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>{children}</Providers>
+        <GoogleAnalytics gaId="G-P84K3W4H63"/>
       </body>
     </html>
   );
