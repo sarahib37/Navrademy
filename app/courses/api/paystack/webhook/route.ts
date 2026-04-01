@@ -76,13 +76,23 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           sender: { email: "hello@navrademy.com", name: "Navrademy" },
           to: [{ email }],
-          subject: "Payment Confirmed - Course Enrollment",
+          subject: "Yahhh 🎉 You’re officially one of #TheNavs",
           htmlContent: `
-            <h2>Payment Successful</h2>
-            <p>You are successfully enrolled in:</p>
-            <strong>${courseTitle}</strong>
-            <p>Reference: ${referenceId}</p>
-            <p>We will contact you with next steps.</p>
+            <h2>Hi there 🥰,</h2>
+            <p>I just had to write this little note to say I’m so, so excited for you.</p>
+            <p>First of all, welcome to #TheNavs 🫶🏽 ( our little cult name 😃)</p>
+            <p>And secondly… this is a big deal.</p>
+            <p>You didn’t just register for a class. You just took a bold step towards yourself. Towards growth, towards upskilling, towards starting that new career you’ve probably been thinking about for a while now.</p>
+            <p>And I really want you to pause and give yourself credit for that.</p>
+            <p>At Navrademy, the vibe is simple: we learn, we grow, we show up for ourselves, and we do it with community, good energy, and people who are genuinely rooting for you.</p>
+            <p>So I want you to know you’re stepping into something warm, practical, and full of possibility.</p>
+            <p>Emphasis on practical.</p>
+            <p>Classes start on 26th April, and we’ll keep you updated with everything you need before then. You’ll also be sent the community link soon.</p>
+            <p>I’m really happy you’re here. Truly.</p>
+            <p>This is the beginning of something beautiful, and I can’t wait for you to experience all that’s ahead.</p>
+            <p>With love,</p>
+            <p>Blessing</p>
+            <p>Founder, Navrademy</p>
           `,
         }),
       });
