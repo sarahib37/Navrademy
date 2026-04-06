@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
-    const { coupon } = await req.json();
+    const { coupon, referralCode } = await req.json();
 
     const cookieStore = await cookies();
     const token = cookieStore.get("payment_session")?.value;
@@ -27,13 +27,23 @@ export async function POST(req: Request) {
     }
 
     const data = snapshot.docs[0].data();
+    
+    const courseQuery = await db
+      .collection("courses")
+      .where("id", "==", data.courseId)
+      .limit(1)
+      .get();
 
-    let courseTitle = data.courseTitle;
-    let originalAmount = data.courseAmount; 
-    let finalAmount = originalAmount;
+    if (courseQuery.empty) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    }
+
+    const course = courseQuery.docs[0].data();
+ 
+    let originalAmount = course.price;
     let discount = 0;
+    let finalAmount = originalAmount;
 
-    // ✅ APPLY COUPON
     if (coupon) {
       const couponQuery = await db
         .collection("coupons")
@@ -41,37 +51,63 @@ export async function POST(req: Request) {
         .where("is_active", "==", true)
         .limit(1)
         .get();
+      
+      if (couponQuery.empty) {
+        return NextResponse.json({ error: "Invalid coupon" }, { status: 400 });
+      }
 
-      if (!couponQuery.empty) {
-        const couponData = couponQuery.docs[0].data();
+      const couponData = couponQuery.docs[0].data();
 
-        const isExpired =
-          couponData.usage_count >= couponData.usage_limit;
+      const isExpired =
+        couponData.usage_count >= couponData.usage_limit;
 
-        const validForCourse =
-          !couponData.course_id ||
-          couponData.course_id === data.courseId;
+      const validForCourse =
+        !couponData.course_id ||
+        couponData.course_id === data.courseId;
 
-        if (!isExpired && validForCourse) {
-          if (couponData.discount_type === "percentage") {
-            discount =
-              (originalAmount * couponData.discount_value) / 100;
-          } else {
-            discount = couponData.discount_value * 100;
-          }
-
-          finalAmount = Math.max(originalAmount - discount, 0);
+      if (!isExpired && validForCourse) {
+        if (couponData.discount_type === "percentage") {
+          discount =
+            (originalAmount * couponData.discount_value) / 100;
+        } else {
+          discount = couponData.discount_value * 100;
         }
 
-
-      } else {
-        return NextResponse.json({
-          error: "Invalid coupon code",
-        }, { status: 400 });
+        finalAmount = Math.max(originalAmount - discount, 0);
       }
     }
 
-    // ✅ PAYSTACK INIT
+    const expectedFinalAmount = Math.max((data.courseAmount)/100 - discount, 0);
+    if (finalAmount !== expectedFinalAmount) {
+      return NextResponse.json({
+        error: "Amount mismatch detected",
+      }, { status: 400 });
+    }
+
+    if (finalAmount < 90000) {
+      return NextResponse.json({
+        error: "Amount too low",
+      }, { status: 400 });
+    }
+
+    let validReferralCode = null;
+
+    if (referralCode) {
+      const refQuery = await db
+        .collection("affiliates")
+        .where("referral_code", "==", referralCode)
+        .limit(1)
+        .get();
+
+      if (!refQuery.empty) {
+        const refData = refQuery.docs[0].data();
+
+        if (refData.email !== data.email) {
+          validReferralCode = referralCode;
+        }
+      }
+    }
+
     const paystackRes = await fetch(
       "https://api.paystack.co/transaction/initialize",
       {
@@ -82,11 +118,12 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           email: data.email,
-          amount: finalAmount,
+          amount: finalAmount * 100,
           metadata: {
             token,
-            courseTitle,
+            courseTitle: data.courseTitle,
             coupon: coupon || null,
+            referralCode: validReferralCode || null,
             originalAmount,
             discount,
           },
@@ -97,8 +134,13 @@ export async function POST(req: Request) {
 
     const paystackData = await paystackRes.json();
 
+    
+
     return NextResponse.json({
       courseTitle: data.courseTitle,
+      email: data.email,
+      duration: course?.duration,
+      curriculum: course?.curriculum,
       originalAmount,
       finalAmount,
       discount,

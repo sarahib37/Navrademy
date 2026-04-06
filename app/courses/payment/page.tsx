@@ -2,102 +2,101 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, CheckCircle, Shield } from "lucide-react";
+import { CheckCircle, Shield, Clock} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
-const loadingSteps = [
-  "Fetching course details...",
-  "Verifying enrollment eligibility...",
-  "Preparing payment options...",
-  "Almost ready...",
-];
+import PaymentLoading from "@/components/PaymentLoading";
+import PaymentCoupon from "@/components/PaymentCoupon";
+import PaymentReferral from "@/components/PaymentReferral";
+import { toast } from "@/hooks/use-toast";
 
 export default function PaymentPage() {
-  const [loading, setLoading] = useState(true);
-  const [stepIndex, setStepIndex] = useState(0);
-  const [apiFinished, setApiFinished] = useState(false);
-
-  const [courseTitle, setCourseTitle] = useState("");
   const [amount, setAmount] = useState(0);
-  const [authorizationUrl, setAuthorizationUrl] = useState("");
-  const [error, setError] = useState("");
-  const [couponError, setCouponError] = useState("");
-
-  const [coupon, setCoupon] = useState("");
+  const [courseTitle, setCourseTitle] = useState("");
+  const [email, setEmail] = useState("");
+  const [duration, setDuration] = useState("");
+  const [curriculum, setCurriculum] = useState<string[]>([]);
   const [originalAmount, setOriginalAmount] = useState(0);
-  const [displayAmount, setDisplayAmount] = useState(amount);
+  const [displayAmount, setDisplayAmount] = useState(originalAmount);
   const [discount, setDiscount] = useState(0);
-  const [couponStatus, setCouponStatus] = useState<"idle" | "valid" | "not_found" | "expired" | "invalid_course">("idle");
+
+  const [loading, setLoading] = useState(true);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [coupon, setCoupon] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [referralCode, setReferralCode] = useState("");
+  const [referralApplied, setReferralApplied] = useState<string | null>(null);
+  const [referralLoading, setReferralLoading] = useState(false);
+
+  const [error, setError] = useState("");
+
+  const initPayment = async () => {
+    try {
+      const res = await fetch("/courses/api/paystack/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setCourseTitle(data.courseTitle);
+        setOriginalAmount(data.originalAmount / 100);
+        setDisplayAmount(data.originalAmount / 100);
+        setEmail(data.email);
+        setCurriculum(data.curriculum || []);
+        setDuration(data.duration || "");
+      } else {
+        setError(data.error);
+      }
+    } catch {
+      setError("Failed to load payment data");
+    } finally {
+      setLoading(false);    
+    }
+  }
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    // Step animation
-    interval = setInterval(() => {
-      setStepIndex((prev) => {
-        if (prev < loadingSteps.length - 1) {
-          return prev + 1;
-        }
-        return prev;
-      });
-    }, 900);
-
-    const initPayment = async () => {
-      try {
-        const res = await fetch("/courses/api/paystack/initiate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ coupon }),
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          setCourseTitle(data.courseTitle);
-          setOriginalAmount(data.originalAmount / 100);
-          setAmount(data.finalAmount / 100);
-          setDiscount(data.discount / 100);
-          setAuthorizationUrl(data.authorization_url);
-        } else {
-          setError(data.error || "Failed to initialize payment");
-        }
-      } catch (err) {
-        setError("Failed to initialize payment");
-      } finally {
-        setApiFinished(true);
-      }
-    };
-
     initPayment();
-
-    return () => clearInterval(interval);
   }, []);
 
-  // Finish remaining loading steps once API is done
+  // smooth price animation
   useEffect(() => {
-    if (!apiFinished) return;
+    let start = displayAmount;
+    let end = amount;
 
-    const finishSteps = async () => {
-      while (stepIndex < loadingSteps.length - 1) {
-        await new Promise((r) => setTimeout(r, 250));
-        setStepIndex((prev) => prev + 1);
-      }
+    if (start === end) return;
 
-      await new Promise((r) => setTimeout(r, 300));
-      setLoading(false);
+    const duration = 300;
+    const startTime = performance.now();
+
+    const animate = (time: number) => {
+      const progress = Math.min((time - startTime) / duration, 1);
+      const value = Math.floor(start + (end - start) * progress);
+
+      setDisplayAmount(value);
+
+      if (progress < 1) requestAnimationFrame(animate);
     };
 
-    finishSteps();
-  }, [apiFinished, stepIndex]);
+    requestAnimationFrame(animate);
+  }, [amount]);
 
-  const handleApplyCoupon = async (e?: React.FormEvent) => {
-    e?.preventDefault(); // ✅ prevent reload
-  
+  const removeCoupon = () => {
+    setCoupon("");
+    setCouponApplied(false);
+    setDiscount(0);
+    setAmount(originalAmount);
+
+    toast({
+      title: "Coupon removed",
+    });
+  };
+
+
+  const applyCoupon = async () => {
+    setCouponLoading(true)
     try {
       const res = await fetch("/courses/api/coupon", {
         method: "POST",
@@ -106,78 +105,125 @@ export default function PaymentPage() {
         },
         body: JSON.stringify({ coupon }),
       });
-  
+
       const data = await res.json();
-  
+
       if (data.status === "valid") {
         setOriginalAmount(data.originalAmount / 100);
         setAmount(data.finalAmount / 100);
         setDiscount(data.discount / 100);
-        setCouponStatus("valid");
+        setCouponApplied(true);
+
+        toast({
+          title: "Coupon applied 🎉",
+          description: `You saved ₦${(data.discount / 100).toLocaleString()}`,
+        });
       } else {
-        setCouponStatus(data.status);
+        setCouponApplied(false);
         setDiscount(0);
-        setAmount((prev) => originalAmount);
+        setAmount(originalAmount);
+
+        const messages = {
+          not_found: "Coupon does not exist",
+          expired: "This coupon has expired",
+          invalid_course: "Not valid for this course",
+        };
+
+        toast({
+          title: "Invalid coupon",
+          description:
+            messages[data.status as keyof typeof messages] ||
+            "Something went wrong",
+        });
       }
     } catch {
-      setCouponError("Failed to apply coupon");
+      toast({
+        title: "Error",
+        description: "Failed to apply coupon",
+      });
+    }finally {
+        setCouponLoading(false);
     }
   };
 
-  useEffect(() => {
-    let start = displayAmount;
-    let end = amount;
+
+  const applyReferral = async () => {
+    setReferralLoading(true);
   
-    if (start === end) return;
+    try {
+      const res = await fetch("/courses/api/referral", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ referralCode }),
+      });
   
-    const duration = 300; // ms
-    const startTime = performance.now();
+      const data = await res.json();
   
-    const animate = (time: number) => {
-      const progress = Math.min((time - startTime) / duration, 1);
+      if (data.status === "valid") {
+        setReferralApplied(referralCode);
+        localStorage.setItem("affiliate_ref", referralCode);
   
-      const value = Math.floor(start + (end - start) * progress);
-      setDisplayAmount(value);
-  
-      if (progress < 1) {
-        requestAnimationFrame(animate);
+        toast({
+          title: "Referral applied 🎉",
+          description: "You are supporting a partner",
+        });
+      } else {
+        toast({
+          title: "Invalid referral",
+          description: "This referral code does not exist",
+        });
       }
-    };
+    } catch {
+      toast({
+        title: "Error",
+        description: "Failed to apply referral",
+      });
+    } finally {
+      setReferralLoading(false);
+    }
+  };
+
+  const removeReferral = () => {
+    setReferralCode("");
+    setReferralApplied(null);
+    localStorage.removeItem("affiliate_ref");
   
-    requestAnimationFrame(animate);
-  }, [amount]);
+    toast({
+      title: "Referral removed",
+    });
+  };
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-red-600">
-        <h1>{error}</h1>
-      </div>
-    );
-  }
-
-  const handlePayNow = async () => {
+  const payNow = async () => {
     setLoading(true);
-  
+
     try {
       const res = await fetch("/courses/api/paystack/initiate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ coupon }), // final coupon
+        body: JSON.stringify({ coupon, referralCode }),
       });
-  
+
       const data = await res.json();
-  
+
       if (res.ok) {
         window.location.href = data.authorization_url;
       } else {
-        setError(data.error);
+        toast({
+          title: "Payment error",
+          description: data.error,
+        });
       }
     } catch {
-      setError("Payment failed");
+      toast({
+        title: "Payment failed",
+        description: "Try again",
+      });
     }
-  
+
     setLoading(false);
   };
 
@@ -189,72 +235,7 @@ export default function PaymentPage() {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="max-w-4xl mx-auto">
 
-            {loading ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col items-center justify-center py-16"
-              >
-                <div className="elevated-card rounded-2xl p-10 max-w-md w-full space-y-8">
-
-                  <div className="flex flex-col items-center space-y-4">
-                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Loader2 className="h-8 w-8 text-primary animate-spin" />
-                    </div>
-
-                    <div className="text-center space-y-1">
-                      <h2 className="text-xl font-heading font-bold text-foreground">
-                        Loading Course Information
-                      </h2>
-
-                      <p className="text-sm text-muted-foreground">
-                        Preparing your checkout
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    {loadingSteps.map((step, i) => (
-                      <motion.div
-                        key={step}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{
-                          opacity: i <= stepIndex ? 1 : 0.3,
-                          x: 0,
-                        }}
-                        transition={{ delay: i * 0.1 }}
-                        className="flex items-center gap-3"
-                      >
-                        {i < stepIndex ? (
-                          <CheckCircle className="h-4 w-4 text-primary" />
-                        ) : i === stepIndex ? (
-                          <Loader2 className="h-4 w-4 text-primary animate-spin" />
-                        ) : (
-                          <div className="h-4 w-4 border rounded-full" />
-                        )}
-
-                        <span
-                          className={`text-sm ${
-                            i <= stepIndex
-                              ? "text-foreground"
-                              : "text-muted-foreground"
-                          }`}
-                        >
-                          {step}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  <div className="space-y-3 pt-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-10 w-full rounded-lg" />
-                  </div>
-
-                </div>
-              </motion.div>
-            ) : (
+            {loading ? <PaymentLoading/> : (
               <>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -267,6 +248,12 @@ export default function PaymentPage() {
                     Payment for{" "}
                     <span className="gradient-text">{courseTitle}</span>
                   </h1>
+                  <p className="text-sm text-muted-foreground">
+                    Registering as{" "}
+                    <span className="font-semibold text-foreground">
+                      {email}
+                    </span>
+                  </p>
                 </motion.div>
 
                 <div className="grid md:grid-cols-5 gap-8">
@@ -281,6 +268,13 @@ export default function PaymentPage() {
                       <span className="font-semibold">{courseTitle}</span>
                     </div>
 
+                    <div className="flex justify-between py-3 border-b">
+                      <span className="text-muted-foreground flex items-center gap-1.5">
+                        <Clock className="h-4 w-4" /> Duration
+                      </span>
+                      <span className="font-semibold text-foreground">{duration}</span>
+                    </div>
+
                     <div className="flex justify-between py-3">
                       <span className="text-muted-foreground font-medium">
                         Total
@@ -290,86 +284,76 @@ export default function PaymentPage() {
                         ₦{originalAmount.toLocaleString()}
                       </span>
                     </div>
+
+                    <div>
+                      <h3 className="text-sm font-heading font-bold text-foreground mb-3">What's Included</h3>
+                      <ul className="space-y-2">
+                        {curriculum && curriculum.map((f) => (
+                          <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
 
                   <div className="md:col-span-2">
-                    <div className="elevated-card rounded-2xl p-6 space-y-5">
+                      <div className="elevated-card rounded-2xl p-6 space-y-5">
 
-                      <h3 className="font-heading font-bold text-lg">
-                        Pay with Paystack
-                      </h3>
+                      <PaymentCoupon
+                        coupon={coupon}
+                        setCoupon={setCoupon}
+                        couponApplied={couponApplied}
+                        applyCoupon={applyCoupon}
+                        removeCoupon={removeCoupon}
+                        loading={couponLoading}
+                      />
 
-                      <div className="rounded-xl bg-muted/50 p-4 text-center">
-                      <motion.p
-                        key={amount}
-                        initial={{ scale: 0.95, opacity: 0.7 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.25 }}
-                        className="text-3xl font-heading font-bold"
-                      >
-                        ₦{displayAmount.toLocaleString()}
-                      </motion.p>
+                      <PaymentReferral
+                        referralCode={referralCode}
+                        setReferralCode={setReferralCode}
+                        referralApplied={referralApplied}
+                        applyReferral={applyReferral}
+                        removeReferral={removeReferral}
+                        loading={referralLoading}
+                      />
 
-                        <p className="text-xs text-muted-foreground">
-                          One-time payment
-                        </p>
-                      </div>
+                        <h3 className="font-heading font-bold text-lg">
+                          Pay with Paystack
+                        </h3>
 
+                        <div className="rounded-xl bg-muted/50 p-4 text-center">
+                          <motion.p
+                            key={amount}
+                            initial={{ scale: 0.95, opacity: 0.7 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 0.25 }}
+                            className="text-3xl font-heading font-bold"
+                          >
+                            ₦{displayAmount.toLocaleString()}
+                          </motion.p>
 
-                      <div className="space-y-2">
-                        <Label>Coupon Code</Label>
-                        <div className="flex gap-2">
-                          <Input
-                            placeholder="Enter coupon"
-                            value={coupon}
-                            onChange={(e) => setCoupon(e.target.value)}
-                          />
-                          <Button onClick={handleApplyCoupon}>
-                            Apply
-                          </Button>
+                          <p className="text-xs text-muted-foreground">
+                            {discount > 0 ? `You saved ₦${discount.toLocaleString()}` : "One-time payment"}
+                          </p>
                         </div>
-                      </div>
 
-                      {couponStatus !== "idle" && (
-                        <div className={`text-sm ${
-                          couponStatus === "valid"
-                            ? "text-green-600"
-                            : "text-red-500"
-                        }`}>
-                          {couponStatus === "valid" && "Coupon applied successfully"}
-                          {couponStatus === "not_found" && "Coupon does not exist"}
-                          {couponStatus === "expired" && "This coupon has expired"}
-                          {couponStatus === "invalid_course" && "This coupon is not valid for this course"}
-                        </div>
-                      )}
-
-                      {discount > 0 && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 5 }}
-                          animate={{ opacity: discount > 0 ? 1 : 0, y: discount > 0 ? 0 : 5 }}
-                          className="flex justify-between py-2 text-green-600"
+                        <Button
+                          variant="hero"
+                          size="lg"
+                          className="w-full"
+                          onClick={payNow}
                         >
-                          <span>Discount</span>
-                          <span>-₦{discount.toLocaleString()}</span>
-                        </motion.div>
-                      )}
+                          Pay Now
+                        </Button>
 
-                      <Button
-                        variant="hero"
-                        size="lg"
-                        className="w-full"
-                        onClick={handlePayNow}
-                        disabled={couponStatus !== "valid" && couponStatus !== "idle"}
-                      >
-                        Pay Now
-                      </Button>
+                        <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground">
+                          <Shield className="h-3.5 w-3.5" />
+                          Secured by Paystack. Your data is safe.
+                        </div>
 
-                      <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground">
-                        <Shield className="h-3.5 w-3.5" />
-                        Secured by Paystack. Your data is safe.
                       </div>
-
-                    </div>
                   </div>
 
                 </div>

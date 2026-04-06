@@ -63,14 +63,13 @@ export default function LiveCourses() {
   }, []);
 
   useEffect(() => {
-      if (loading) return; // ⛔ wait for data
+      if (loading) return;
     
       const hash = window.location.hash;
       if (!hash) return;
     
       const id = hash.replace("#", "");
     
-      // 🔥 Find the course first
       const found = courses.find((c) => {
         const safeId = c.title
           .toLowerCase()
@@ -81,12 +80,10 @@ export default function LiveCourses() {
     
       if (!found) return;
     
-      // ✅ Set correct category FIRST
       if (found.type && found.type !== activeCategory) {
         setActiveCategory(found.type as CategoryKey);
       }
     
-      // 🔁 Wait for re-render AFTER category switch
       setTimeout(() => {
         const el = document.getElementById(id);
     
@@ -96,10 +93,9 @@ export default function LiveCourses() {
             block: "start",
           });
         }
-      }, 500); // ⏱️ give React + animation time
+      }, 500); 
     }, [loading, courses]);
 
-  // 🔥 Normalize DB → UI format
   const allCourses = courses.map((course) => ({
     course,
     type: course.type as CategoryKey,

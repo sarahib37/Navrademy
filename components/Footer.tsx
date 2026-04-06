@@ -19,6 +19,8 @@ const footerLinks = {
     { label: "Contact", href: "/contact" },
     { label: "Community", href: "/community" },
     { label: "Mentorship", href: "/mentorship" },
+    { label: "Be an Affiliate", href: "/affiliate" },
+    { label: "Admin", href: "/admin" },
   ],
   Legal: [
     { label: "Privacy Policy", href: "#" },

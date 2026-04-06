@@ -1,12 +1,12 @@
 import {
     BookOpen,
     GraduationCap,
-    Users,
     BarChart3,
     Settings,
     MessageSquare,
     CalendarDays,
     LogOut,
+    Share2,
   } from "lucide-react";
   import {useRouter} from "next/navigation";
   import {
@@ -31,8 +31,8 @@ import {
   ];
   
   const managementItems = [
-    // { title: "Users", icon: Users, key: "users" },
     // { title: "Messages", icon: MessageSquare, key: "messages" },
+    { title: "Affiliates", icon: Share2, key: "affiliates" },
     { title: "Analytics", icon: BarChart3, key: "analytics" },
   ];
   

@@ -24,6 +24,7 @@ const navLinks = [
   { label: "Community", href: "/community" },
   { label: "Contact", href: "/contact" },
   { label: "FAQ", href: "/faq" },
+  { label: "Affiliate", href: "/affiliate" },
 ];
 
 const Navbar = () => {

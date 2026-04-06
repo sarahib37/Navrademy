@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
       const email = payment.customer.email;
       const amount = payment.amount;
       const coupon = payment.metadata?.coupon || "";
+      const referralCode = payment.metadata?.referralCode || "";
       const courseTitle = payment.metadata?.courseTitle || "";
       const referenceId = payment.reference;
 
@@ -57,10 +58,42 @@ export async function POST(req: NextRequest) {
         }
       }
 
+      if (referralCode) {
+        const referralQuery = await db
+          .collection("affiliates")
+          .where("referral_code", "==", referralCode)
+          .limit(1)
+          .get();
+      
+        if (!referralQuery.empty) {
+          const referralDoc = referralQuery.docs[0];
+          const referralData = referralDoc.data()
+          const commissionRate = Number((referralData.commission_rate)/100)
+          const affiliateEarning = (amount/100)*commissionRate
+      
+          await referralDoc.ref.update({
+            total_earnings: FieldValue.increment(affiliateEarning),
+            pending_earnings: FieldValue.increment(affiliateEarning),
+            referral_count: FieldValue.increment(1),
+          });
+
+          await db.collection("referrals").add({
+            referralCode,
+            courseTitle,
+            affiliateEarning: affiliateEarning,
+            amount: amount/100,
+            email,
+            reference: referenceId,
+            created_at: new Date(),
+          });
+        }
+      }
+
       await db.collection("payments").add({
         email,
         amount,
         coupon,
+        referralCode,
         courseTitle,
         reference: referenceId,
         status: "success",

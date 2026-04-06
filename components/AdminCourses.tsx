@@ -348,6 +348,7 @@ export default function AdminCourses() {
                 <TableHead className="hidden sm:table-cell">Course Purchased</TableHead>
                 <TableHead>Amount Paid</TableHead>
                 <TableHead className="hidden md:table-cell">Coupon</TableHead>
+                <TableHead className="hidden md:table-cell">Referral</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -367,6 +368,9 @@ export default function AdminCourses() {
                     <TableCell className="text-sm">₦{(p.amount/100).toLocaleString()}</TableCell>
                     <TableCell className="hidden md:table-cell text-sm text-muted-foreground font-mono">
                       {p.coupon ?? "No coupon used."}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell text-sm text-muted-foreground font-mono">
+                      {p.referralCode ?? "No referral code."}
                     </TableCell>
                   </TableRow>
                 ))

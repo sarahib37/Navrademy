@@ -5,17 +5,11 @@ import Footer from "@/components/Footer";
 import AffiliateForm from "@/components/AffiliateForm";
 import AffiliateDashboard from "@/components/AffiliateDashboard";
 import { useAffiliate } from "@/hooks/useAffiliate";
-import { generateCode } from "@/lib/generateToken";
 import { motion } from "framer-motion";
 import { DollarSign, Link2, Share2, Users } from "lucide-react";
 
 const Affiliate = () => {
   const { affiliate, loginAndInit, loading } = useAffiliate()
-
-  const handleSubmit = async (name: string, email: string) => {
-    const code = generateCode(name);
-    // await register(name, email, code);
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,7 +34,7 @@ const Affiliate = () => {
       <section className="pb-12 px-4">
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { icon: DollarSign, title: "10% Commission", desc: "Earn 10% of every sale made through your link" },
+            { icon: DollarSign, title: "5% Commission", desc: "Earn 5% of every sale made through your link, and 10% for special affiliates" },
             { icon: Link2, title: "Unique Link", desc: "Get a personal referral link to share anywhere" },
             { icon: Users, title: "No Limits", desc: "Refer as many people as you want, earn on every sale" },
           ].map((item, i) => (
@@ -60,6 +54,8 @@ const Affiliate = () => {
           ))}
         </div>
       </section>
+
+    
 
       {!affiliate ? <AffiliateForm loginAndInit={loginAndInit} loading={loading}/> : <AffiliateDashboard affiliate={affiliate}/>}
 

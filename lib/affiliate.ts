@@ -11,6 +11,7 @@ export type Affiliate = {
   total_earnings: number
   pending_earnings: number
   paid_earnings: number
+  created_at: Date 
 };
 
 export type AffiliateFormProps = {

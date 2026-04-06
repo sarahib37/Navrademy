@@ -12,6 +12,7 @@ import AdminCourses from "@/components/AdminCourses";
 import AdminEvents from "@/components/AdminEvents";
 import AdminAnalytics from "@/components/AdminAnalytics";
 import { BlogEditor } from "@/components/BlogEditor";
+import AdminAffiliates from "./AdminAffiliates";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function AdminDashboard() {
     blog: AdminBlog,
     courses: AdminCourses,
     events: AdminEvents,
+    affiliates: AdminAffiliates,
     analytics: AdminAnalytics,
   };
 
