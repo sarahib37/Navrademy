@@ -14,7 +14,7 @@ export default function AffiliateForm({ loginAndInit, loading }: AffiliateFormPr
         className="bg-card border border-border max-w-2xl mx-auto mb-5 rounded-xl p-6 space-y-4 text-center"
     >
               <h2 className="text-xl font-heading font-bold text-foreground text-center">Join the Program</h2>
-              <p className="text-muted-foreground text-sm">Sign in with Google to get your referral link instantly.</p>
+              <p className="text-muted-foreground text-sm">Sign in with Google to get your referral code instantly.</p>
               <Button onClick={loginAndInit} disabled={loading} size="lg" className="w-full">
                 {loading ? (
                   <>

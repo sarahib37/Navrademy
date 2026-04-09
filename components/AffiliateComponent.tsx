@@ -25,7 +25,7 @@ const Affiliate = () => {
               Earn by sharing courses you believe in
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Get a unique referral link, share it with your network, and earn a commission on every course sale.
+              Get a unique referral code, share it with your network, and earn a commission on every course sale.
             </p>
           </motion.div>
         </div>
@@ -34,8 +34,8 @@ const Affiliate = () => {
       <section className="pb-12 px-4">
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { icon: DollarSign, title: "5% Commission", desc: "Earn 5% of every sale made through your link, and 10% for special affiliates" },
-            { icon: Link2, title: "Unique Link", desc: "Get a personal referral link to share anywhere" },
+            { icon: DollarSign, title: "5% Commission", desc: "Earn 5% of every sale made through your code, and 10% for special affiliates" },
+            { icon: Link2, title: "Unique Code", desc: "Get a personal referral code to share anywhere" },
             { icon: Users, title: "No Limits", desc: "Refer as many people as you want, earn on every sale" },
           ].map((item, i) => (
             <motion.div

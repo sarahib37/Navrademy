@@ -1,10 +1,13 @@
-import { Instagram, Twitter } from "lucide-react";
-import { FaTiktok } from "react-icons/fa";
+import { Instagram, Twitter, Linkedin, Youtube } from "lucide-react";
+import { FaTiktok, FaWhatsapp } from "react-icons/fa";
 
 export const socials = [
   { label: "TikTok", href: "https://www.tiktok.com/@navrademy", icon: FaTiktok },
   { label: "Instagram", href: "https://www.instagram.com/navrademy", icon: Instagram },
   { label: "Twitter", href: "https://x.com/navrademy", icon: Twitter },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/navrademy", icon: Linkedin },
+  { label: "YouTube", href: "https://www.youtube.com/@NavraEcosystem", icon: Youtube },
+  { label: "WhatsApp", href: "https://whatsapp.com/channel/0029Vb84VNK1SWt2SMtjK61K", icon: FaWhatsapp },
 ];
 
 interface SocialLinksProps {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, setContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -61,8 +61,14 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
   });
 
   useEffect(() => {
-    if (editor && content) {
-      editor.commands.setContent(content);
+    if (!editor) return;
+
+    const current = editor.getHTML();
+
+    if (content !== current) {
+      editor.commands.setContent(content, {
+        emitUpdate: false,
+      }); // false = preserve cursor
     }
   }, [content, editor]);
   

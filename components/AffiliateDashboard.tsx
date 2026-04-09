@@ -162,7 +162,8 @@ export default function AffiliateDashboard({ affiliate }: Props) {
                     <CheckCircle className="w-7 h-7 text-primary" />
                 </div>
                 <h2 className="text-xl font-heading font-bold text-foreground">You're all set!</h2>
-                <p className="text-sm text-muted-foreground"> Share this link and earn {affiliateInfo.commission_rate}% on every course sale.</p>
+                
+                <p className="text-sm text-muted-foreground"> Share this code and earn {affiliateInfo.commission_rate}% on every course sale.</p>
                 <div className="flex items-center gap-2">
                     <Input value={affiliateInfo.referral_code} readOnly className="text-sm" />
                     <Button variant="outline" size="icon" onClick={copyLink}>

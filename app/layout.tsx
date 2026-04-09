@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { WhatsAppButton } from "@/components/WhatsappButton";
 import { Toaster } from "@/components/ui/toaster";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://navrademy.com"),
@@ -22,6 +23,7 @@ export default function RootLayout({
         <Providers>{children}</Providers>
         <GoogleAnalytics gaId="G-P84K3W4H63"/>
         <WhatsAppButton/>
+        <ScrollToTop/>
         <Toaster/>
       </body>
     </html>
