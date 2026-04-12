@@ -27,13 +27,13 @@ import {
   const contentItems = [
     { title: "Blog Posts", icon: BookOpen, key: "blog" },
     { title: "Courses", icon: GraduationCap, key: "courses" },
-    { title: "Events", icon: CalendarDays, key: "events" },
+    // { title: "Events", icon: CalendarDays, key: "events" },
   ];
   
   const managementItems = [
     // { title: "Messages", icon: MessageSquare, key: "messages" },
     { title: "Affiliates", icon: Share2, key: "affiliates" },
-    { title: "Analytics", icon: BarChart3, key: "analytics" },
+    // { title: "Analytics", icon: BarChart3, key: "analytics" },
   ];
   
 //   const systemItems = [
