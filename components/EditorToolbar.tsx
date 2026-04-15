@@ -66,7 +66,11 @@ export const EditorToolbar = ({ editor }: Props) => {
         // ✅ Use your lib function directly
         const { url } = await uploadImageToImgBB(file);
   
-        editor.chain().focus().setImage({ src: url }).run();
+        editor.chain().focus().setImage({ 
+          src: url,
+          alt: prompt("Enter image description (alt text)") || "",
+          title: prompt("Enter image title (optional)") || "",
+        }).run();
   
       } catch (err) {
         console.error("Image upload failed", err);

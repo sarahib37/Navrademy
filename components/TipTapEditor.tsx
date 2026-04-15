@@ -20,13 +20,29 @@ interface TiptapEditorProps {
 
 export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
 
+  const CustomImage = Image.extend({
+    addAttributes() {
+      return {
+        ...this.parent?.(),
+  
+        alt: {
+          default: "",
+        },
+  
+        title: {
+          default: "",
+        },
+      };
+    },
+  });
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
       }),
 
-      Image.configure({
+      CustomImage.configure({
         inline: false,
         allowBase64: true,
         HTMLAttributes: {

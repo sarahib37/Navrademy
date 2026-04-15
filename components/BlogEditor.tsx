@@ -28,6 +28,8 @@ export const BlogEditor = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [deleteUrl, setDeleteUrl] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [imageAlt, setImageAlt] = useState("");
+  const [imageTitle, setImageTitle] = useState("");
 
   const mode = searchParams.get("mode"); // "create" or "edit"
   const id = searchParams.get("id");
@@ -147,6 +149,8 @@ export const BlogEditor = () => {
         draft: isDraft,
         featuredImage: imageUrl,
         deleteUrl: imageDeleteUrl,
+        featuredImageAlt: imageAlt,
+        featuredImageTitle: imageTitle,
         updatedAt: serverTimestamp(),
       };
   
@@ -220,6 +224,7 @@ export const BlogEditor = () => {
         </div>
       </div>
 
+      {/* Featured Image */}
       <div className="space-y-3">
         <Label>Featured Image</Label>
 
@@ -258,6 +263,26 @@ export const BlogEditor = () => {
               Remove
             </Button>
           )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label>Image Alt Text</Label>
+            <Input
+              value={imageAlt}
+              onChange={(e) => setImageAlt(e.target.value)}
+              placeholder="Describe the image (SEO + accessibility)"
+            />
+          </div>
+
+          <div>
+            <Label>Image Title (optional)</Label>
+            <Input
+              value={imageTitle}
+              onChange={(e) => setImageTitle(e.target.value)}
+              placeholder="Tooltip / additional context"
+            />
+          </div>
         </div>
       </div>
 

@@ -11,6 +11,8 @@ export type Blog = {
     metaTitle?: string;
     metaDescription?: string;
     featuredImage?: string;
+    featuredImageAlt: string;
+    featuredImageTitle: string;
     draft?: boolean;
     createdAt?: Timestamp;
     updatedAt?: Timestamp;

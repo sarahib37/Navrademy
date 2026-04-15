@@ -30,7 +30,8 @@ export default function BlogSlugComponent({post}: Props) {
               <div className="relative w-full h-64 mt-4 mb-6">
                 <Image
                   src={post.featuredImage}
-                  alt={post.title}
+                  alt={post.featuredImageAlt} 
+                  title={post.featuredImageTitle}
                   fill
                   className="object-cover rounded-xl"
                 />
