@@ -10,6 +10,11 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 import Image from "@tiptap/extension-image";
+import { Table } from "@tiptap/extension-table";
+import {TableRow} from "@tiptap/extension-table-row";
+import {TableCell} from "@tiptap/extension-table-cell";
+import {TableHeader} from "@tiptap/extension-table-header";
+import { tableEditing } from "prosemirror-tables";
 
 import {EditorToolbar} from "./EditorToolbar";
 
@@ -36,6 +41,14 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
     },
   });
 
+  const TiptapTable = Table.extend({
+    addProseMirrorPlugins() {
+      return [
+        tableEditing(),
+      ];
+    },
+  })
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -49,6 +62,18 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
           class: "rounded-md max-w-full",
         },
       }),
+      TiptapTable.configure({
+        resizable: true,
+        allowTableNodeSelection: true,
+        HTMLAttributes: {
+          class: "table-auto border-collapse w-full",
+        },
+      }),
+      TableRow,
+      
+      TableHeader,
+      
+      TableCell,
 
       BulletList,
       OrderedList,

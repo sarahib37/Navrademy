@@ -234,3 +234,48 @@
 html, body {
   overflow-x: hidden;
 }
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+  padding: 8px;
+  text-align: left;
+}
+
+.prose th {
+  background-color: #f9fafb; /* gray-50 */
+  font-weight: 600;
+}
+
+.ProseMirror-selectednode {
+  outline: 2px solid #fb923c; /* orange-400 */
+}
+
+.ProseMirror table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.ProseMirror td,
+.ProseMirror th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  position: relative;
+}
+
+.ProseMirror .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #3b82f6;
+  cursor: col-resize;
+}

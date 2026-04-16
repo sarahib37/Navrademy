@@ -19,11 +19,15 @@ import {
   AlignCenter,
   AlignRight,
   Link as LinkIcon,
-  Minus,
+  Minus, 
+  Table as TableIcon, 
+  Rows, 
+  Columns
 } from "lucide-react";
 import { uploadImageToImgBB } from "@/lib/imgbb";
 import { Toggle } from "@/components/ui/toggle";
 import { Separator } from "./ui/seperator";
+
 
 interface Props {
   editor: any;
@@ -142,6 +146,45 @@ export const EditorToolbar = ({ editor }: Props) => {
 
       <Btn active={editor.isActive({ textAlign: "right" })} onClick={() => editor.chain().focus().setTextAlign("right").run()} title="Right">
         <AlignRight className="w-4 h-4" />
+      </Btn>
+
+      <Separator orientation="vertical" className="mx-1 h-6" />
+
+      <Btn
+        onClick={() =>
+          editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+        }
+        title="Insert Table"
+      >
+        <TableIcon className="w-4 h-4" />
+      </Btn>
+
+      <Btn onClick={() => editor.chain().focus().addRowAfter().run()} title="Add Row">
+        <Rows className="w-4 h-4" />
+      </Btn>
+
+      <Btn onClick={() => editor.chain().focus().deleteRow().run()} title="Delete Row">
+        <Rows className="w-4 h-4 rotate-180" />
+      </Btn>
+
+      <Btn onClick={() => editor.chain().focus().addColumnAfter().run()} title="Add Column">
+        <Columns className="w-4 h-4" />
+      </Btn>
+
+      <Btn onClick={() => editor.chain().focus().deleteColumn().run()} title="Delete Column">
+        <Columns className="w-4 h-4 rotate-180" />
+      </Btn>
+
+      <Btn onClick={() => editor.chain().focus().mergeCells().run()} title="Merge Cells">
+        ⛶
+      </Btn>
+
+      <Btn onClick={() => editor.chain().focus().splitCell().run()} title="Split Cell">
+        ⛶↔
+      </Btn>
+
+      <Btn onClick={() => editor.chain().focus().deleteTable().run()} title="Delete Table">
+        🗑
       </Btn>
 
       <Separator orientation="vertical" className="mx-1 h-6" />
