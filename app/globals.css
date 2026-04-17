@@ -328,3 +328,15 @@ html, body {
 .ProseMirror ol ol ol {
   list-style-type: lower-roman;
 }
+
+.ProseMirror a {
+  color: #2563eb;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.ProseMirror a:hover {
+  color: #1d4ed8; /* blue-700 */
+}
+
