@@ -95,7 +95,7 @@ export const TiptapEditor = ({ content, onChange }: TiptapEditorProps) => {
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose max-w-none min-h-[300px] p-4 focus:outline-none text-foreground",
+          "max-w-none min-h-[300px] p-4 focus:outline-none text-foreground",
       },
     },
     immediatelyRender: false,
