@@ -1,8 +1,8 @@
 export const FIRST_EVENT = [
     {
     id: "first-event-001",
-    slug: "career-mastery-workshop",
-    title: "Stop Guessing. Start Building Your Digital Future.",
+    slug: "own-your-next-move",
+    title: "Own Your Next Move",
     tagline: "LIVE 2-DAY EXPERIENCE · BY NAVRADEMY",
     description:
       "In 2 focused days, you'll break through the confusion, discover which high-income digital skill fits your life, and leave with a clear plan you can act on — even from zero.",

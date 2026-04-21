@@ -141,18 +141,16 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
           <motion.div {...fadeUp} className="elevated-card p-6 md:p-10 relative">
             <Quote className="absolute -top-4 left-6 h-10 w-10 text-primary/30" />
             <div className="space-y-4 text-muted-foreground leading-relaxed">
-              <p>
-                I've watched too many brilliant people stay stuck — not because they lacked talent, but because no
-                one ever sat them down and helped them see the path clearly. They jumped from course to course,
-                idea to idea, year to year. Always moving. Never landing.
-              </p>
-              <p>
-                That's why we built this. Two days. No fluff. No "follow your passion" speeches. Just the framework,
-                the clarity, and the people who can help you finally pick a direction and walk in it.
-              </p>
-              <p>
-                If you show up fully, you will leave with a plan. That's a promise.
-              </p>
+              <p>Hey You😊</p>
+              <p>First of all, I am genuinely excited that you’re here. The fact that you took this step already says a lot about you yunno. It means you know you’re capable of more and you’re ready for your next level.</p>
+              <p>Own Your Next Move was created for ambitious people like you who know they don’t want to stay stuck, stagnant, or confused about what comes next.</p>
+              <p>Over the next few days, you’ll hear honest conversations, practical strategies, and real insights that can help you move smarter in your career and life.</p>
+              <p>Our goal is simple: to help you leave this event clearer, more confident, and more intentional about your next move.</p>
+              <p>Take a look around, get registered, tell someone about this event.
+              C’mon we can’t be stingy here, lol and come with an open mind.</p>
+              <p>I am truly glad you’re here.</p>
+              <p>With love,
+              <br/>Blessing Teddy</p>
             </div>
             <div className="mt-6 pt-6 border-t border-border flex items-center gap-3">
               <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-[#FFB199] flex items-center justify-center text-white font-heading font-bold">
