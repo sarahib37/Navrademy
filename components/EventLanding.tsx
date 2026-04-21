@@ -30,10 +30,6 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
   const [regOpen, setRegOpen] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
-  const scrollToRegister = () => {
-    formRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   const shareEvent = () => {
     const text = `${FIRST_EVENT.title}\n${FIRST_EVENT.description}\n\n${window.location.href}`;
     const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
@@ -114,7 +110,7 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
             </motion.div>
 
             <motion.div {...fadeUp} transition={{ delay: 0.3 }} className="flex flex-wrap justify-center gap-3 pt-2">
-              <Button variant="hero" size="lg" onClick={scrollToRegister} className="rounded-full">
+              <Button variant="hero" size="lg" onClick={() => setRegOpen(true)} className="rounded-full">
                 Save My Seat
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
@@ -443,7 +439,7 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
               Stop letting another year pass in the same uncertainty. Two days is all it takes to finally know your next move.
             </p>
             <div className="pt-4">
-              <Button variant="hero" size="lg" onClick={scrollToRegister} className="rounded-full">
+              <Button variant="hero" size="lg" onClick={() => setRegOpen(true)} className="rounded-full">
                 Count Me In
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
