@@ -89,6 +89,31 @@ export default function EventRegistrationModal({ open, onOpenChange, eventId, ev
         created_at: serverTimestamp(),
       });
 
+      fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": process.env.BREVO_API_KEY!,
+        },
+        body: JSON.stringify({
+          sender: { email: "hello@navrademy.com", name: "Navrademy" },
+          to: [{ email }],
+          subject: "You’ve successfully registered for Own Your Next Move  with Navrademy🎉",
+          htmlContent: `
+            <h2>Hi there 🥰,</h2>
+            <p>We’re excited to have you join us for this powerful 3-day virtual experience designed to help you gain clarity, position yourself better, and make smarter career moves.</p>
+            <p>📅 Date: April 23rd – 25th, 2026</p>
+            <p>🕐 Time: 6:00 PM Daily (WAT)</p>
+            <p>📍 Location: Online</p>
+            <br/>
+            <p>🔗 Event Channel Link: https://whatsapp.com/channel/0029Vb84VNK1SWt2SMtjK61K</p>
+            <p>Join the channel to get updates, reminders, speaker announcements, and access details before the event begins.</p>
+            <p>We’ll send you a reminder before we begin the event.</p>
+            <p>See you soon 🔥</p>
+          `,
+        }),
+      });
+
       setSuccess(true);
 
       queryClient.invalidateQueries({
@@ -119,7 +144,7 @@ export default function EventRegistrationModal({ open, onOpenChange, eventId, ev
             <CheckCircle className="h-16 w-16 text-primary" />
             <h3 className="text-2xl font-heading font-bold">You're In! 🎉</h3>
             <p className="text-muted-foreground">
-              Your spot has been reserved. We'll send you all the details closer to the event date.
+              Your spot has been reserved. Please check your mail for more info.
             </p>
             <Button onClick={() => handleClose(false)} className="mt-2">Done</Button>
           </div>
