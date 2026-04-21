@@ -141,8 +141,6 @@ export const SPEAKERS = [
   },
 ];
 
-"use server";
-
 export async function sendRegistrationEmail(email: string) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
