@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { FIRST_EVENT } from "@/lib/eventList";
+import { FIRST_EVENT, SPEAKERS } from "@/lib/eventList";
+import founderImg from "@/assets/founder.jpeg";
+import Image from "next/image";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -153,12 +155,17 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
               <br/>Blessing Teddy</p>
             </div>
             <div className="mt-6 pt-6 border-t border-border flex items-center gap-3">
-              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-[#FFB199] flex items-center justify-center text-white font-heading font-bold">
-                N
-              </div>
+              <Image
+                src={founderImg}
+                alt="Founder of Navrademy"
+                width={48}
+                height={48}
+                loading="lazy"
+                className="h-12 w-12 rounded-full object-cover ring-2 ring-primary/30"
+              />
               <div>
-                <p className="font-heading font-bold text-foreground text-sm">The Navrademy Team</p>
-                <p className="text-xs text-muted-foreground">Founders & Mentors</p>
+                <p className="font-heading font-bold text-foreground text-sm">Blessing Teddy</p>
+                <p className="text-xs text-muted-foreground">Founder & Host · Navrademy</p>
               </div>
             </div>
           </motion.div>
@@ -297,6 +304,53 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative section-padding overflow-hidden bg-[#0D1B2A] text-white">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-1/4 left-1/3 h-[360px] w-[360px] rounded-full bg-primary/15 blur-[140px]" />
+          <div className="absolute bottom-0 right-1/4 h-[300px] w-[300px] rounded-full bg-[#FFB199]/10 blur-[120px]" />
+        </div>
+        <div className="container relative mx-auto px-4 lg:px-8 max-w-5xl">
+          <motion.div {...fadeUp} className="text-center mb-12">
+            <p className="text-xs uppercase tracking-[0.25em] text-primary font-semibold mb-3">Meet Your Speakers</p>
+            <h2 className="text-2xl md:text-4xl font-heading font-bold">
+              Hosted by <span className="bg-gradient-to-r from-primary to-[#FFB199] bg-clip-text text-transparent">people who've done it.</span>
+            </h2>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {SPEAKERS.map((s, i) => (
+              <motion.div
+                key={s.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-sm hover:border-primary/30 hover:bg-white/[0.05] transition-all"
+              >
+                <div className="flex flex-col items-center text-center gap-4">
+                  <div className="relative">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-[#FFB199] blur-md opacity-40 group-hover:opacity-60 transition-opacity" />
+                    <Image
+                      src={s.img}
+                      alt={s.name}
+                      width={112}
+                      height={112}
+                      loading="lazy"
+                      className="relative h-28 w-28 rounded-full object-cover ring-2 ring-primary/40"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="font-heading font-bold text-lg">{s.name}</h3>
+                    <p className="text-xs uppercase tracking-wider text-primary mt-1">{s.role}</p>
+                    <p className="text-sm text-white/60 leading-relaxed mt-3">{s.bio}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

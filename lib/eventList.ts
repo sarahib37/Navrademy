@@ -1,3 +1,6 @@
+import speaker1 from "@/assets/speaker1.jpeg";
+import speaker2 from "@/assets/speaker2.jpeg";
+
 export const FIRST_EVENT = [
     {
     id: "first-event-001",
@@ -9,7 +12,7 @@ export const FIRST_EVENT = [
     startDateTime: "2026-04-23T18:00:00+01:00",
     endDateTime: "2026-04-24T18:00:00+01:00",
     location: "Online",
-    locationType: "Zoom",
+    locationType: "Youtube Live",
     duration: "2 Days",
     promoCode: "FIRST15",
   
@@ -122,3 +125,18 @@ export const FIRST_EVENT = [
     clarityPromise:
       "If you attend both days fully and don't leave with a clear direction, we'll give you a complimentary 1-on-1 session to make it right.",
 }] 
+
+export const SPEAKERS = [
+  {
+    name: "David Olasunmonu",
+    role: "CEO & Co-Founder · Twenties Tribe",
+    bio: "David Olasunmonu is the CEO and Co-founder of Twenties Tribe, a prominent community-focused platform aimed at empowering young Africans in their twenties through growth, connection, and resources.",
+    img: speaker1,
+  },
+  {
+    name: "Joshua Riebelle",
+    role: "CEO & Co-Founder · ShopKite",
+    bio: "Joshua Riebelle is a Nigerian tech entrepreneur and creative director best known as the CEO and Co-founder of ShopKite, a platform designed to help retail and neighborhood stores in Africa manage inventory and sales.",
+    img: speaker2,
+  },
+];
