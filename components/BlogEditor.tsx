@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useRouter, useSearchParams } from "next/navigation";
 import { uploadImageToImgBB, deleteImageFromImgBB } from "@/lib/imgbb";
+import { TagInput } from "./TagInput";
 
 export const BlogEditor = () => {
   const [title, setTitle] = useState("");
@@ -30,6 +31,8 @@ export const BlogEditor = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imageAlt, setImageAlt] = useState("");
   const [imageTitle, setImageTitle] = useState("");
+  const [writerName, setWriterName] = useState("");
+  const [tags, setTags] = useState<string[]>([])
 
   const mode = searchParams.get("mode"); // "create" or "edit"
   const id = searchParams.get("id");
@@ -54,6 +57,8 @@ export const BlogEditor = () => {
             setSlug(data.slug || "");
             setImagePreview(data.featuredImage || "");
             setDeleteUrl(data.deleteUrl || "");
+            setWriterName(data.writerName || "");
+            setTags(Array.isArray(data.tags) ? data.tags : []);
           }
         } catch (error) {
           console.error("Error fetching blog:", error);
@@ -146,11 +151,13 @@ export const BlogEditor = () => {
         metaDescription,
         category,
         content,
+        writerName: writerName || "",
+        tags: tags || [],
         draft: isDraft,
-        featuredImage: imageUrl,
-        deleteUrl: imageDeleteUrl,
-        featuredImageAlt: imageAlt,
-        featuredImageTitle: imageTitle,
+        featuredImage: imageUrl || "",
+        deleteUrl: imageDeleteUrl || "",
+        featuredImageAlt: imageAlt || "",
+        featuredImageTitle: imageTitle || "",
         updatedAt: serverTimestamp(),
       };
   
@@ -187,28 +194,43 @@ export const BlogEditor = () => {
         </Button>
       </div>
 
-      {/* Title */}
-      <div>
-        <Label>Title</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} required/>
+      {/* Title + Slug */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label>Title</Label>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} required/>
+        </div>
+
+        <div>
+          <Label>Slug</Label>
+          <Input value={slug} readOnly className="bg-muted" />
+        </div>
       </div>
 
-      <div>
-        <Label>Slug</Label>
-        <Input value={slug} readOnly className="bg-muted" />
-      </div>
+      {/* Category + Writer */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label>Category</Label>
+          <Input value={category} required onChange={(e) => setCategory(e.target.value)} />
+        </div>
 
-      {/* Meta + Category */}
+        <div className="space-y-2">
+          <Label>
+            Writer Name <span className="text-xs text-muted-foreground font-normal">(displayed alongside Navrademy Team)</span>
+          </Label>
+          <Input value={writerName} onChange={(e) => setWriterName(e.target.value)}/>
+        </div>
+      </div>
+      
+
+      {/* Meta + Tags */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label>Meta Title</Label>
           <Input value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} />
         </div>
 
-        <div>
-          <Label>Category</Label>
-          <Input value={category} required onChange={(e) => setCategory(e.target.value)} />
-        </div>
+        <TagInput tags={tags} onChange={setTags} min={3} max={8} />
       </div>
 
       {/* Excerpt + Meta Description */}

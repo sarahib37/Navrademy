@@ -6,8 +6,8 @@ export const FIRST_EVENT = [
     tagline: "LIVE 2-DAY EXPERIENCE · BY NAVRADEMY",
     description:
       "In 2 focused days, you'll break through the confusion, discover which high-income digital skill fits your life, and leave with a clear plan you can act on — even from zero.",
-    startDateTime: "17th April, 2026",
-    endDateTime: "18th April, 2026",
+    startDateTime: "2026-04-23T18:00:00+01:00",
+    endDateTime: "2026-04-24T18:00:00+01:00",
     location: "Online",
     locationType: "Zoom",
     duration: "2 Days",

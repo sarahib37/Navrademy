@@ -42,7 +42,7 @@ export default function BlogComponent({ posts }: Props) {
                                         <motion.article key={post.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="elevated-card overflow-hidden group">
                                         <Link href={`/blog/${post.slug}`}>
                                             <div className="h-40 gradient-bg-soft relative">
-                                                {post.featuredImage ? <Image src={post.featuredImage} alt={post.featuredImageAlt} title={post.featuredImageTitle}/> : <div className="absolute inset-0 pattern-dots" />}
+                                                {post.featuredImage ? <Image src={post.featuredImage} alt={post.featuredImageAlt} fill className="object-cover" title={post.featuredImageTitle}/> : <div className="absolute inset-0 pattern-dots" />}
                                             </div>
                                             <div className="p-6">
                                                 <span className="text-xs text-primary font-medium">{post.category}</span>

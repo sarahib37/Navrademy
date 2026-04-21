@@ -14,5 +14,5 @@ export default function EventPage() {
     return <div className="p-10 text-center">Event not found</div>;
   }
 
-  return <EventLanding event={event} />;
+  return <EventLanding FIRST_EVENT={event} />;
 }
