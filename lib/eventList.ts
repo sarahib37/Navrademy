@@ -1,3 +1,4 @@
+"use server"
 import speaker1 from "@/assets/speaker1.jpeg";
 import speaker2 from "@/assets/speaker2.jpeg";
 
