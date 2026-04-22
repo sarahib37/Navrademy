@@ -4,22 +4,22 @@ import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Adaeze Okafor",
-    role: "Digital Marketer",
-    quote: "Navrademy didn't just teach me marketing — they helped me land my first client within 3 weeks of finishing the course.",
-    initials: "AO",
-  },
-  {
-    name: "Samuel Mensah",
-    role: "Product Manager",
-    quote: "The mentorship alone was worth it. Having someone who's done it before guide your career decisions is game-changing.",
-    initials: "SM",
-  },
-  {
-    name: "Fatima Bello",
-    role: "UX Designer",
-    quote: "I switched from banking to tech design in 4 months. The portfolio project at the end made all the difference.",
+    name: "Folashade Bright",
+    role: "SEO Specialist",
+    quote: "Navrademy is more than a place to learn, it feels like home and family. The mentorship program was one of the greatest gifts I received in 2025.",
     initials: "FB",
+  },
+  {
+    name: "Joseph Ogwu",
+    role: "SEO Specialist",
+    quote: "Navrademy didn’t just teach me a skill, it changed my trajectory. Thanks to Navrademy, I’ve secured multiple paid internships, gained international recognition, and consulted with U.S.-based students in SEO and Web3",
+    initials: "JO",
+  },
+  {
+    name: "Preye Deborah Nwaku",
+    role: "SEO Specialist",
+    quote: "Navrademy showed me what happens when you stop guessing and start learning the right way.",
+    initials: "PN",
   },
 ];
 
