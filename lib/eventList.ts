@@ -6,14 +6,14 @@ export const FIRST_EVENT = [
     id: "first-event-001",
     slug: "own-your-next-move",
     title: "Own Your Next Move",
-    tagline: "LIVE 2-DAY EXPERIENCE · BY NAVRADEMY",
+    tagline: "LIVE 3-DAY EXPERIENCE · BY NAVRADEMY",
     description:
-      "In 2 focused days, you'll break through the confusion, discover which high-income digital skill fits your life, and leave with a clear plan you can act on — even from zero.",
+      "In 3 focused days, you'll break through the confusion, discover which high-income digital skill fits your life, and leave with a clear plan you can act on — even from zero.",
     startDateTime: "2026-04-23T18:00:00+01:00",
     endDateTime: "2026-04-24T18:00:00+01:00",
     location: "Online",
     locationType: "Youtube Live",
-    duration: "2 Days",
+    duration: "3 Days",
     promoCode: "FIRST15",
   
     problem: {
@@ -94,31 +94,6 @@ export const FIRST_EVENT = [
       {
         label: "Career Switchers",
         description: "You know the current path isn't working. You need someone to help you figure out the right next step — without starting from zero.",
-      },
-    ],
-  
-    stats: [
-      { value: "2,500+", label: "Students trained" },
-      { value: "95%", label: "Career success rate" },
-      { value: "50+", label: "Expert mentors" },
-      { value: "2 Days", label: "To go from confusion to direction" },
-    ],
-  
-    testimonials: [
-      {
-        text: "I spent 2 years trying to figure out which skill to focus on. After this experience, I had a clear answer in less than 2 days. I wish this existed when I graduated.",
-        name: "Adaeze O.",
-        role: "Digital Marketer, Lagos",
-      },
-      {
-        text: "The Clarity Framework alone was worth every naira. I understood myself better after Day 1 than I had in 3 years of job searching. Now I'm building something real.",
-        name: "Samuel M.",
-        role: "Freelance SEO Specialist",
-      },
-      {
-        text: "I came in as a confused banking professional. I left with a 6-month plan into UX design. Four months later, I had my first design client. This event changed my trajectory.",
-        name: "Fatima B.",
-        role: "UX Designer, Remote",
       },
     ],
   
