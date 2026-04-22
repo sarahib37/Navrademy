@@ -11,32 +11,32 @@ type Props = {}
 
 const stories = [
     {
-      name: "Adaeze Okafor",
-      role: "Digital Marketer",
+      name: "Joseph Ogwu",
+      role: "SEO Specialist",
       type: "Student Journey",
-      story: "After graduating with a degree in Mass Communication, I spent 8 months applying to jobs with no success. Navrademy's Digital Marketing course gave me the hands-on skills and portfolio I needed. I landed my first client within 3 weeks of finishing.",
-      outcome: "Landed first freelance client in 3 weeks",
+      story: "I started my SEO course with Navrademy in October while working full-time, attending classes in the evenings and studying late into the night. The journey was demanding, but the structure and clarity kept me going. By December, I graduated as the top student. Since then, I’ve secured multiple paid internships, gained international recognition, and consulted with U.S.-based students in SEO and Web3. Navrademy didn’t just teach me a skill, it changed my trajectory.",
+      outcome: "Graduated as top student, secured global opportunities.",
     },
     {
-      name: "Samuel Mensah",
-      role: "Product Manager",
-      type: "Career Switch",
-      story: "I was a project manager in construction for 5 years. The mentorship program helped me map my transferable skills, build a product portfolio, and transition into tech. The one-on-one guidance was invaluable.",
-      outcome: "Transitioned from construction to tech PM",
-    },
-    {
-      name: "Fatima Bello",
-      role: "UX Designer",
+      name: "Folashade Bright",
+      role: "SEO Specialist",
       type: "Student Journey",
-      story: "I switched from banking to UX design in 4 months. The bootcamp was intense but structured perfectly. The portfolio project at the end is what got me interviews at 3 companies.",
-      outcome: "Hired as UX Designer within 4 months",
+      story: "Navrademy is more than a place to learn, it feels like home and family. The mentorship program was one of the greatest gifts I received in 2025. From personal growth to building a strong portfolio, every class was impactful. The tutors are deeply invested in your progress, and the community is supportive, no competition, just growth. As a writer, the SEO class helped me structure my ideas better and optimize my writing for visibility.",
+      outcome: "Improved writing clarity and SEO optimization skills",
     },
     {
-      name: "Chidi Nwankwo",
-      role: "Data Analyst",
-      type: "Pilot Outcome",
-      story: "I joined during the pilot phase of the Data Analytics course. Even then, the quality was exceptional. The SQL and Power BI skills I learned are what I use every single day at work now.",
-      outcome: "Promoted to senior analyst role",
+      name: "Okwanuzor Oputa Hephzibah",
+      role: "SEO Specialist",
+      type: "Student Journey",
+      story: "I started my SEO journey with Navrademy while balancing my final year in Pharmacy school, managing classes, projects, and practical SEO tasks at the same time. It was intense, with deadlines often overlapping, but I stayed consistent. I was recognized multiple times as Best Student of the Week, and after graduating, I began applying SEO to my work as a content writer, helping businesses turn engagement into paying customers.",
+      outcome: "Recognized for excellence, applied SEO to real business growth.",
+    },
+    {
+      name: "Preye Deborah Nwaku",
+      role: "SEO Specialist",
+      type: "Student Journey",
+      story: "I finished university confused, with no clear path or direction. But everything changed when I joined Navrademy in October. The step-by-step learning, practical tasks, and mentorship gave me clarity and real progress. I wasn’t just learning theory, I was building skills that made sense, alongside a community pushing each other to grow. I graduated as a Top 3 student in my cohort and secured an internship immediately after. Navrademy showed me what happens when you stop guessing and start learning the right way.",
+      outcome: "Top 3 graduate, secured internship immediately after.",
     },
 ];
 
