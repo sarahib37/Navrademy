@@ -12,7 +12,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, Loader2, Shield } from "lucide-react";
-import { sendRegistrationEmail } from "@/lib/eventList";
+import { sendRegistrationEmail } from "@/lib/eventAction";
 
 interface Props {
   open: boolean;
