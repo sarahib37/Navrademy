@@ -95,7 +95,7 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
 
             <motion.div {...fadeUp} transition={{ delay: 0.2 }} className="flex flex-wrap justify-center gap-2.5">
               {[
-                { icon: Calendar, text: "Apr 23–24, 2026" },
+                { icon: Calendar, text: "Apr 23–25, 2026" },
                 { icon: MapPin, text: FIRST_EVENT.location },
                 { icon: Clock, text: FIRST_EVENT.duration },
               ].map((m) => (
@@ -397,7 +397,7 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
               Your next step <span className="bg-gradient-to-r from-primary to-[#FFB199] bg-clip-text text-transparent">starts here.</span>
             </h2>
             <p className="text-white/60 max-w-xl mx-auto leading-relaxed">
-              You don't need another year of uncertainty. You need two focused days, the right framework,
+              You don't need another year of uncertainty. You need three focused days, the right framework,
               and people who've been where you're going. This is your entry point.
             </p>
 
@@ -436,7 +436,7 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
               Clarity changes speed. Direction changes results.
             </h2>
             <p className="text-muted-foreground">
-              Stop letting another year pass in the same uncertainty. Two days is all it takes to finally know your next move.
+              Stop letting another year pass in the same uncertainty. Three days is all it takes to finally know your next move.
             </p>
             <div className="pt-4">
               <Button variant="hero" size="lg" onClick={() => setRegOpen(true)} className="rounded-full">
