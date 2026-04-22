@@ -254,7 +254,7 @@ const EventLanding = ({ FIRST_EVENT }: EventLandingProps) => {
           <motion.div {...fadeUp} className="text-center mb-14">
             <p className="text-xs uppercase tracking-widest text-primary font-semibold mb-3">The Experience</p>
             <h2 className="text-2xl md:text-3xl font-heading font-bold">
-              Two days. <span className="text-primary">Complete transformation.</span>
+              Three days. <span className="text-primary">Complete transformation.</span>
             </h2>
           </motion.div>
 

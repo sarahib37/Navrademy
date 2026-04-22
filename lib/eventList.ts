@@ -98,7 +98,7 @@ export const FIRST_EVENT = [
     ],
   
     clarityPromise:
-      "If you attend both days fully and don't leave with a clear direction, we'll give you a complimentary 1-on-1 session to make it right.",
+      "If you attend all days fully and don't leave with a clear direction, we'll give you a complimentary 1-on-1 session to make it right.",
 }] 
 
 export const SPEAKERS = [
