@@ -13,6 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, Loader2, Shield } from "lucide-react";
 import { sendRegistrationEmail } from "@/lib/eventAction";
+import { FaWhatsapp } from "react-icons/fa";
+import Link from "next/link";
 
 interface Props {
   open: boolean;
@@ -124,8 +126,9 @@ export default function EventRegistrationModal({ open, onOpenChange, eventId, ev
             <CheckCircle className="h-16 w-16 text-primary" />
             <h3 className="text-2xl font-heading font-bold">You're In! 🎉</h3>
             <p className="text-muted-foreground">
-              Your spot has been reserved. Please check your mail for more info.
+              Your spot has been reserved. Please check your mail or join our whatsapp community for more info.
             </p>
+            <Link href="https://whatsapp.com/channel/0029Vb84VNK1SWt2SMtjK61K"><FaWhatsapp/> Join our WhatsApp community</Link>
             <Button onClick={() => handleClose(false)} className="mt-2">Done</Button>
           </div>
         </DialogContent>
