@@ -20,7 +20,7 @@ export default function AdminEvent({}: Props) {
           try {
             const q = query(
               collection(db, "event_registrations"),
-              orderBy("created_at", "desc")
+              // orderBy("created_at", "desc")
             );
       
             const querySnapshot = await getDocs(q);
