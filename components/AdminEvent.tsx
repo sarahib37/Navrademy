@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Card } from "@/components/ui/card";
 import { Mail, Phone } from "lucide-react";
 import { Badge } from "./ui/badge";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 
 type Props = {}
 
@@ -52,7 +52,7 @@ export default function AdminEvent({}: Props) {
                 <TableHead className="hidden lg:table-cell">Phone</TableHead>
                 <TableHead className="hidden sm:table-cell">Guests</TableHead>
                 <TableHead className="hidden lg:table-cell">How heard</TableHead>
-                <TableHead className="hidden md:table-cell">Registered</TableHead>
+                {/* <TableHead className="hidden md:table-cell">Registered</TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -82,9 +82,9 @@ export default function AdminEvent({}: Props) {
                       )}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{r.how_heard || "—"}</TableCell>
-                    <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
+                    {/* <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
                       {format(new Date(r.created_at), "MMM d, p")}
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))
               )}
