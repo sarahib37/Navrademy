@@ -20,17 +20,17 @@ export default function AdminEvent({}: Props) {
           try {
             const q = query(
               collection(db, "event_registrations"),
-              orderBy("createdAt", "desc")
+              orderBy("created_at", "desc")
             );
       
             const querySnapshot = await getDocs(q);
       
-            const blogs = querySnapshot.docs.map((doc) => ({
+            const registrations = querySnapshot.docs.map((doc) => ({
               id: doc.id,
               ...doc.data(),
             }));
       
-            setEventRegistrations(blogs);
+            setEventRegistrations(registrations);
           } catch (error) {
             console.error("Error fetching blogs:", error);
           } finally {
