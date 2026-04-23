@@ -128,7 +128,7 @@ export default function EventRegistrationModal({ open, onOpenChange, eventId, ev
             <p className="text-muted-foreground">
               Your spot has been reserved. Please check your mail or join our whatsapp community for more info.
             </p>
-            <Link href="https://whatsapp.com/channel/0029Vb84VNK1SWt2SMtjK61K"><Button><FaWhatsapp/> Join our WhatsApp community</Button></Link>
+            <Link href="https://whatsapp.com/channel/0029Vb84VNK1SWt2SMtjK61K"><Button ><FaWhatsapp/> Join Event Community</Button></Link>
             <Button onClick={() => handleClose(false)} className="mt-2">Done</Button>
           </div>
         </DialogContent>
