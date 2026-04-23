@@ -27,7 +27,7 @@ import {
   const contentItems = [
     { title: "Blog Posts", icon: BookOpen, key: "blog" },
     { title: "Courses", icon: GraduationCap, key: "courses" },
-    // { title: "Events", icon: CalendarDays, key: "events" },
+    { title: "Events", icon: CalendarDays, key: "events" },
   ];
   
   const managementItems = [
